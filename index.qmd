@@ -85,7 +85,7 @@ Chaque objet est défini par **un identifiant unique**.
 :::
 
 
-## Vecteurs et rasters {.nostretch}
+## Vecteur et raster {.nostretch}
 
 
 ![@lambert2016](img/raster_vecteur.png)
@@ -314,9 +314,10 @@ plot(st_geometry(mtq_z), lwd = 2)
 :::
 :::
 
+
 ## Polygones de Voronoi
 
-```{r sf_voronoi,  fig.height=3, fig.width=3, nm=TRUE}
+```{r sf_voronoix}
 mtq_c |> 
   st_union() |> 
   st_voronoi() |> 
@@ -327,20 +328,177 @@ mtq_c |>
   st_cast("MULTIPOLYGON") |>
   st_geometry() |>
   plot(col = "ivory4")
+
 ```
 
+## Le package `terra` {.nostretch}
+
+# Acquisition de données
+
+## Données vecteurx
+rnaturalearth, osmdata
+
+## Données rasterx
+rgee, getData, elevatr ...
+
+
+
+# Cartographie thématique
+
+## Les packages principaux
+
+- **`tmap`** [@R-tmap]
+- `ggplot2` + `ggspatial` [@R-ggspatial]
+- **`mapsf`** [@R-mapsf] remplace `cartography` [@R-cartography]
+
+D'autres packages plus anecdotiques : `mapmisc`, `choropletr`, `oceanis`... 
+
+## Le package `mapsf` <img src="img/logo_mapsf.png" align="right" width="150px"/> {.nostretch}
+
+`mapsf` permet de créer la plupart des types de carte utilisés habituellement en cartographie statistique.  
+ 
+`mapsf` est le successeur de [`cartography`](http://riatelab.github.io/cartography/docs/) [@R-cartography], il offre les mêmes fonctionnalités principales tout en étant plus léger et plus ergonomique.
+
+![Chaîne de traitement typique](img/workflow.png)
+
+## Doc et arguments principaux
+
+## Les types de carte
+
+::: {.r-stack}
+
+![](img/map01.png)
+
+::: {.fragment}
+![](img/map02.png)
+:::
+::: {.fragment}
+![](img/map03.png)
+:::
+::: {.fragment}
+![](img/map04.png)
+:::
+::: {.fragment}
+![](img/map05.png)
+:::
+::: {.fragment}
+![](img/map06.png)
+:::
+::: {.fragment}
+![](img/map07.png)
+:::
+::: {.fragment}
+![](img/map08.png)
+:::
+::: {.fragment}
+![](img/map09.png)
+:::
+:::
+
+
+## Utilisation simple
+<small>
+```{r mapsf_simple}
+#| fig-width: 5
+#| fig.height: 6
+#| output-location: column
+library(mapsf)
+# Import the sample dataset
+mtq <- mf_get_mtq()
+# Plot the base map
+mf_map(x = mtq)
+# Plot proportional symbols
+mf_map(x = mtq, var = "POP", type = "prop")
+# Plot a map layout
+mf_layout(
+  title = "Population in Martinique", 
+  credits = "T. Giraud; Sources: INSEE & IGN, 2018"
+)
+```
+</small>
+
+
+## Utilisation avancée
+::: columns
+::: {.column width="50%"}
+<small>
+```{r mapsf_avance}
+#| results: hide
+#| code-overflow: scroll
+# Export a map with a theme and extra margins 
+mf_export(x = mtq, filename = "img/mtq.svg",  width = 5, 
+          theme = "green", expandBB = c(0,0,0,.3)) 
+# Plot a shadow
+mf_shadow(mtq, col = "grey10", add = TRUE)
+# Plot a choropleth map
+mf_map(x = mtq, var = "MED", type = "choro",
+       pal = "Dark Mint", 
+       breaks = "quantile", 
+       nbreaks = 6, 
+       leg_title = "Median Income\n(euros)", 
+       leg_val_rnd = -2, 
+       add = TRUE)
+# Start an inset map
+mf_inset_on(x = "worldmap", pos = "right")
+# Plot mtq position on a worldmap
+mf_worldmap(mtq, col = "#0E3F5C")
+# Close the inset
+mf_inset_off()
+# Plot a title
+mf_title("Wealth in Martinique, 2015")
+# Plot credits
+mf_credits("T. Giraud\nSources: INSEE & IGN, 2018")
+# Plot a scale bar
+mf_scale(size = 5)
+# Plot a north arrow
+mf_arrow('topleft')
+dev.off()
+```
+</small>
+:::
+::: {.column width="50%"}
+![](img/mtq.svg)
+:::
+:::
+## Cartographie interactive
+
+- 2015 : `leaflet` (Joe Cheng et al.), repose sur la librairie javascript `leaflet`.
+- 2015 : `mapview` (Tim Appelhans et al.), repose sur le package `leaflet`.
+- 2018 : `mapdeck` (David Cooley), repose sur les librairies `Mapbox GL` et `Deck.gl`
+- `tmap`
+
+
+## Palettes de couleurs
+
+::: columns
+::: {.column width="50%"}
+**De nombreuses palettes sont directement disponibles dans R-base** et près de 70 (!) packages proposent des palettes.   
+
+![`hcl.colors()`](img/swatch-plot-1.svg)
+
+:::
+
+::: {.column width="50%"}
+
+
+- `paletteer` [@R-paletteer] propose 2587 palettes (!!!)
+- `cols4all` [@R-cols4all] propose une app shiny
+
+![`cols4all::c4a_gui()`](img/cols4all.png)
+:::
+
+:::
 
 
 
 
-## terra (et stars)
 
 
 
 
 ## Perspectives
 
-# OpenStreetMap 
+# OpenStreetMap x
 
 ## OpenStreetMap  
 
@@ -384,127 +542,151 @@ Source : [https://www.openstreetmap.org/about](https://www.openstreetmap.org/abo
 
 :::
 
-
-# Acquisition de données
-
-## Données vecteur
-
-rnaturalearth, osmdata
-
-
-## Données raster
-
-rgee, getData, elevatr ...
-
-
-
-# Cartographie thématique
-
-
-## Les packages principaux
-
-- **`tmap`** [@R-tmap]
-- `ggplot2` + `ggspatial` [@R-ggspatial]
-- **`mapsf`** [@R-mapsf] remplace `cartography` [@R-cartography]
-
-
-
-D'autres packages plus anecdotiques : `mapmisc`, `choropletr`, `oceanis`... 
-
-
-
-
-## Raster
-
-![](img/hypso-1.png)
-
-- `terra` 
-- 2022 : `tidyterra` (Diego Hernangómez)  
-- `tmap` / `mapsf`
-
-
-
-
-::: {.attribution}
-[Site web de `tidyterra`](https://dieghernan.github.io/tidyterra/articles/tidyterra.html)
-:::
-
-
-
-## Cartographie interactive
-
-- 2015 : `leaflet` (Joe Cheng et al.), repose sur la librairie javascript `leaflet`.
-- 2015 : `mapview` (Tim Appelhans et al.), repose sur le package `leaflet`.
-- 2018 : `mapdeck` (David Cooley), repose sur les librairies `Mapbox GL` et `Deck.gl`
-- `tmap`
-
-
-
-## Palettes de couleurs
-
-
-De nombreuses palettes sont disponibles dans R-base.   
-
-![](img/swatch-plot-1.svg)
-
-
-
-Au moins 70 (soixante-dix !) packages proposent des palettes.
-
-- 2018 : `paletteer` (Emil Hvitfeldt) (2568 palettes !!!)
-- 2023 : `cols4all`	(Martijn Tennekes)
-
-
-
-## Misc
-
-* `rayshader` pour créer des cartes en 3D.   
-
-![](img/ray1.png)  
-
-
-
-::: {.aside} 
-[Site web de `rayshader`](https://www.rayshader.com/)  
-:::
-
-
-
-
-## Misc
-- `tanaka`
-![](img/tanaka.png)
-
-
-## Misc
-- `linemap`
-
-
-![](img/linemap.png)  
-
-## Misc
-- `fisheye`
-
-
-
-![](img/img000001.png) ![](img/img000100.png)  ![](img/mob.gif)
-
-
-## Misc
-- `cartogram`
-
-
-![](img/map1.png)  ![](img/map3.png)  
-
-![](img/map4.png)  ![](img/map5.png)
-
-
-::: aside
-Voir aussi [cartogramR: Continuous Cartogram](https://CRAN.R-project.org/package=cartogramR) de Pierre-André Cornillon et Florent Demoraes.
-:::
-
-
-
+## Acquisition des données 
+
+Le package `osmdata` LOGO, permet d'extraire des données depuis OpenStreetMap.
+```{r}
+#| cache: true
+#| code-fold: true
+#| code-summary: "Acquisition des données OSM"
+library(sf)
+library(osmdata)
+center <- data.frame(x=3903683, y=2329735) |>
+  st_as_sf(coords = c("x","y"), crs = "EPSG:3035") |>
+  st_buffer(dist = 1000)
+
+bb <- st_transform(center,"EPSG:4326") |>
+  st_bbox()
+
+water <- opq(bbox = bb)|>
+  add_osm_feature(key = 'natural', value = "water") |>
+  osmdata_sf() |>
+  unique_osmdata()
+
+river <- c(st_geometry(water$osm_polygons),
+           st_geometry(water$osm_multipolygons)) |>
+  st_cast('MULTIPOLYGON') |>
+  st_make_valid() |>
+  st_transform(st_crs(center))|>
+  st_intersection(center) |>
+  st_union()
+
+
+green <- opq(bbox = bb)|>
+  add_osm_features(features = list(
+    "leisure" = c("park", "garden"),
+    "landuse" = c("cemetery", "grass", "forest"))
+    ) |>
+  osmdata_sf() |>
+  unique_osmdata()
+
+esp_vert <- st_geometry(green$osm_polygons) |>
+  st_cast('MULTIPOLYGON') |>
+  st_make_valid() |>
+  st_transform(st_crs(center))|>
+  st_intersection(center) |>
+  st_union()
+
+highway <- opq(bbox = bb)|>
+  add_osm_feature(key = 'highway') |>
+  osmdata_sf() |>
+  unique_osmdata()
+
+routes <- st_geometry(highway$osm_lines) |>
+  st_cast('LINESTRING') |>
+  st_make_valid() |>
+  st_transform(st_crs(center))|>
+  st_intersection(center) |>
+  st_union() |>
+  st_buffer(5) |>
+  st_buffer(-3)
+
+railway <- opq(bbox = bb)|>
+  add_osm_feature(key = 'railway') |>
+  osmdata_sf() |>
+  unique_osmdata()
+
+rail <- st_geometry(railway$osm_lines) |>
+  st_cast('LINESTRING') |>
+  st_make_valid() |>
+  st_transform(st_crs(center))|>
+  st_intersection(center) |>
+  st_union()
+
+building <- opq(bbox = bb)|>
+  add_osm_feature(key = 'building') |>
+  osmdata_sf() |>
+  unique_osmdata()
+
+batiments <- c(st_geometry(building$osm_polygons),
+               st_geometry(building$osm_multipolygons)) |>
+  st_cast('MULTIPOLYGON') |>
+  st_make_valid() |>
+  st_transform(st_crs(center))|>
+  st_intersection(center) |>
+  st_union()
+
+
+restaurants <- opq(bbox = bb)|>
+  add_osm_feature(key = 'amenity', value = "restaurant") |>
+  osmdata_sf() |>
+  unique_osmdata()
+restaurants_points <- st_geometry(restaurants$osm_points) |>
+  st_transform(st_crs(center))|>
+  st_intersection(center)
+restaurants_poly <- st_geometry(restaurants$osm_polygons) |>
+  st_centroid() |>
+  st_transform(st_crs(center))|>
+  st_intersection(center)
+resto <- c(restaurants_points, restaurants_poly)
+
+
+tourism <- opq(bbox = bb)|>
+  add_osm_feature(key = 'tourism', value = "hotel") |>
+  osmdata_sf() |>
+  unique_osmdata()
+
+
+hotel_points <- tourism$osm_points[, "name"] |>
+  st_set_agr("constant") |>
+  st_transform(st_crs(center))|>
+  st_intersection(center)
+hotel_poly <- rbind(tourism$osm_polygons[, "name"],
+                    tourism$osm_multipolygons[, "name"]) |>
+  st_set_agr("constant") |>
+  st_centroid() |>
+  st_transform(st_crs(center))|>
+  st_intersection(center)
+hotel <- rbind(hotel_points, hotel_poly)
+```
+
+##
+
+```{r}
+library(mapsf)
+mf_theme("candy", fg = "#393939")
+mf_export(center, "img/avignon.png", width = 800)
+mf_map(center, col = "#f2efe9", border = NA, add = TRUE)
+mf_map(river, col = "#aad3df", border = "#aad3df", lwd = .5, add = TRUE)
+mf_map(esp_vert, col = "#c8facc", border = "#c8facc", lwd = .5, add = TRUE)
+mf_map(rail, col = "grey50", lty = 2, lwd = .2, add = TRUE)
+mf_map(routes, col = "white", border = "white", add = TRUE)
+mf_map(batiments, col = "#d9d0c9", border = "#c6bab1", lwd = 1, add = TRUE)
+mf_map(hotel, col = "white", bg = "#000094", pch = 21, lwd = 1, cex = 1, add = TRUE)
+mf_map(resto, col = "white", bg = "#940010", pch = 23, lwd = 1, cex = 1, add = TRUE)
+mf_map(center, col = NA, border = "grey25", lwd = 4, add = TRUE)
+mf_title("Avignon")
+mf_credits("T. Giraud, 2023\nOpenStreetMap contributors, 2023")
+mf_scale(100, unit = "m")
+mf_arrow(pos = "topright")
+mf_legend(type = "symb", pos = "bottomright2", val = c("Hotels", "Restaurants"),
+          pal = c("#000094", "#940010"), pt_cex = c(1, 1), pt_pch = c(21, 23),
+          border = "white", title = "")
+dev.off()
+```
+
+## {.nostretch}
+![](img/avignon.png){width="800px"}
 
 
 ## Ressources
