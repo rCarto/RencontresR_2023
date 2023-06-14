@@ -1,0 +1,528 @@
+---
+title: "L'écosystème spatial de R"
+subtitle: "Rencontres R - Avignon"
+author: "Timothée Giraud"
+institute: RIATE - CNRS
+title-slide-attributes: 
+  data-background-image: img/logo_RR.png
+  data-background-size: 5%
+  data-background-position: 2% 2%
+  
+format: 
+  revealjs:
+    fig-align: center
+    smaller: true
+    theme : [custom.scss]
+    show-slide-number: all
+    slide-number: true
+    code-line-numbers: false
+
+execute:
+  echo: true
+  output: true
+  warning: true
+  include: true
+  cache: true
+  
+bibliography: references.bib
+date: 23 06 2023
+date-format: "D MMM YYYY"
+lang: fr
+logo: "img/logos-footer.png"
+csl: "universite-de-montreal-apa.csl"
+knitr:
+  opts_chunk: 
+    fig.path: "figs/"
+    cache.path: "cache/"
+    comment: "" 
+output-dir: docs
+standalone: true
+highlight-style: atom-one
+---
+
+
+
+
+# Les données spatiales
+
+## Vecteur et raster
+
+::: columns
+::: {.column width="49%"}
+### Raster
+
+C'est une **image localisée dans l'espace**.
+
+L'information géographique est alors stockée dans des pixels.
+
+
+Chaque pixel, **défini par une résolution**, possède des valeurs qui peuvent être traitées et cartographiées.
+:::
+
+::: {.column width="51%"}
+![](img/raster.png)
+:::
+:::
+
+
+## Vecteur et raster
+
+
+::: columns
+::: {.column width="49%"}
+### Vecteur
+
+Il s'agit d'objets géométriques de type **points**, **lignes** ou **polygones**.
+
+Ces objets vectoriels ne **pixellisent pas**.
+
+Chaque objet est défini par **un identifiant unique**.
+:::
+
+::: {.column width="49%"}
+![](img/vecteur.png)
+:::
+:::
+
+
+## Vecteurs et rasters {.nostretch}
+
+
+![@lambert2016](img/raster_vecteur.png)
+
+
+
+
+
+
+# Le socle de l'écosystème
+
+## Quelques repères historiques 
+
+- avant 2003 : `spatial`, `sgeostat`, `splancs`, `akima`, `geoR`, `spatstat`, `spdep`, `maptools`.   
+- 2003 : `rgdal` [@R-rgdal], interface entre R et GDAL/PROJ4  
+- 2005 : `sp` [@R-sf], classes et méthodes dédiées aux objets spatiaux, **adoption rapide** 
+- 2008 : support de `sp` par `ggplot2` 
+- 2010 : `rgeos` [@R-rgeos], interface entre R et GEOS.   
+- 2010 : `raster` [@R-raster], support des données raster
+- 2016 : <u>`sf`</u> [@R-sf], remplace `sp`, `rgdal` et `rgeos`
+- 2018 : <u>`stars`</u> [@pebesma2023], remplace `raster`
+- 2020 : <u>`terra`</u> [@R-terra], remplace aussi `raster`
+
+
+## Le socle du socle
+::: columns
+
+::: {.column width="25%"}
+
+Des bibliothèques géographiques largement utilisées : 
+
+* GDAL - Geospatial Data Abstraction Library [@GDAL]
+* PROJ - Coordinate Transformation Software [@PROJ] 
+* GEOS - Geometry Engine - Open Source [@GEOS]
+
+:::
+
+::: {.column width="75%"}
+![@pebesma2023 [chap. 1.7]](img/sf_deps.png)
+:::
+:::
+
+
+
+## rgdal, rgeos, maptools {.nostretch}
+
+![[Upcoming changes to popular R packages for spatial data: what you need to do](https://geocompx.org/post/2023/rgdal-retirement/)](img/rgdal_jak.png)
+
+## rgdal, rgeos, maptools
+Pour accompagner le processus d'archivage des packages :
+
+- Une série de posts de blog (avril 2022, décembre 2022, avril 2023, mai 2023)
+- Plusieurs talks dans des conférences
+- Communications directes aux auteurs de packages dépendants (emails, issues)
+- Message au démarrage des packages :
+<small>
+```{r exemple_rgeos}
+#| echo: true
+#| cache: false
+#| output-location: column
+library(rgeos)
+```
+</small>
+
+## rgdal, rgeos, maptools {.nostretch}
+
+```{r rev_dep}
+#| echo: false
+library(crandep)
+core <- c("sf", "terra", "stars", "raster", "rgdal", "rgeos")
+l <- vector("list", length(core))
+for (i in seq_along(l)){
+  l[[i]] <- get_dep(name = core[i], type = c("Reverse imports", 
+                                             "Reverse depends",
+                                             "Reverse Suggests"), 
+                    scrape = TRUE)
+}
+deps <- do.call(rbind, l)
+ref <- data.frame(Type = c("Depends", "Imports", "Suggests"), 
+                  id = c("depends", "imports", "suggests"))
+
+x <- table(deps$from, deps$type)
+x <- as.data.frame(as.data.frame.matrix(x))
+x$total <- apply(x, 1, sum)
+x <- x[order(x$import, decreasing = T),]
+tab <- data.frame(t(x))
+tab$id <- row.names(tab)
+ref <- merge(ref, tab, by = "id")
+library(gt)
+gt(data = ref[,c("Type", "sf", "stars", "terra", "raster", "rgdal", "rgeos")], ) |> 
+  tab_header("Reverse Dependencies") |> 
+  tab_source_note("Source : CRAN, 14 juin 2023")
+```
+
+
+## Le package `sf` {.nostretch}
+
+<img src="img/logo_sf.gif" align="right" width="150px"/>
+
+
+
+Publié fin 2016 par Edzer Pebesma. 
+
+ - import / export
+ - manipulation 
+ - affichage 
+ 
+Des objets simples (standard [*simple feature*](https://en.wikipedia.org/wiki/Simple_Features)) dont la manipulation est assez aisée. 
+
+Compatibilité du package avec les *pipe* (`|>` ou `%>%`) et les opérateurs du `tidyverse`.
+
+
+```{r knit_init}
+#| include: false
+#| cache: false
+knitr::knit_hooks$set(nm = function(before, options, envir){
+  if (before){
+    par(mar=c(0,0,0,0))
+  } 
+})
+knitr::opts_chunk$set(nm=TRUE, echo=TRUE)
+```
+
+## Format {.nostretch}
+
+
+![[Simple Features for R Vignette](https://r-spatial.github.io/sf/articles/sf1.html)](img/sf.png){width="75%"}
+
+Les objets `sf` sont des `data.frame` dont l'une des colonnes contient des géométries.  
+Format très pratique, les données et les géométries sont intrinsèquement liées dans un même objet.
+
+
+
+
+## Import
+
+```{r sf_import}
+#| eval: true
+#| cache: false
+library(sf)
+mtq <- st_read(dsn = "data/mtq.gpkg", layer = "mtq")
+```
+</br>
+Les principaux formats de fichier sont pris en charge
+
+
+## Affichage 
+```{r sf_plot_multi}
+#| fig-height: 2
+plot(mtq)
+```
+
+```{r sf_plot}
+#| fig-height: 2
+plot(st_geometry(mtq))
+```
+
+
+## Centroides
+
+```{r sf_centro}
+#| warning: false
+#| code-line-numbers: "1"
+mtq_c <- st_centroid(mtq)
+plot(st_geometry(mtq))
+plot(st_geometry(mtq_c), cex = 1.2, 
+     col = "red", pch = 20, 
+     add = TRUE)
+```
+
+## Matrice de distance
+
+```{r sf_matrix}
+#| code-line-numbers: "1"
+mat <- st_distance(x = mtq_c, y = mtq_c)
+mat[1:5, 1:5]
+```
+
+## Agrégation
+
+```{r sf_agg}
+#| code-line-numbers: "1"
+mtq_u <- st_union(mtq)
+plot(st_geometry(mtq), col = "lightblue")
+plot(st_geometry(mtq_u), lwd = 2, border = "red", add = TRUE)
+```
+
+## Zone tampon
+
+```{r sf_buff}
+#| code-line-numbers: "1"
+mtq_b <- st_buffer(x = mtq_u, dist = 5000)
+plot(st_geometry(mtq_b), col = "grey", lwd = 2, border = "red")
+plot(st_geometry(mtq), col = "lightblue", add = TRUE)
+plot(st_geometry(mtq_u), lwd = 2, add = TRUE)
+```
+
+## Intersection
+::: columns
+::: {.column width="30%"}
+```{r sf_interse}
+#| echo: false
+#| fig-height: 14
+m <- rbind(c(700015,1624212), c(700015,1641586), 
+           c(719127,1641586), c(719127,1624212), 
+           c(700015,1624212))
+p <- st_sf(st_sfc(st_polygon(list(m))), crs = st_crs(mtq))
+plot(st_geometry(mtq))
+plot(p, border="red", lwd=4, add=T)
+text(719127,1641586, "p", pos = 4, cex = 3)
+```
+:::
+
+::: {.column width="60%"}
+```{r sf_intersect2}
+#| warning: false
+#| layout-ncol: 2
+#| fig-height: 10
+#| code-line-numbers: "1"
+mtq_z <- st_intersection(x = mtq, y = p)
+plot(st_geometry(mtq))
+plot(st_geometry(mtq_z), col = "red", 
+     lwd = 2, add = TRUE)
+plot(st_geometry(mtq_z), lwd = 2)
+```
+:::
+:::
+
+## Polygones de Voronoi
+
+```{r sf_voronoi,  fig.height=3, fig.width=3, nm=TRUE}
+mtq_c |> 
+  st_union() |> 
+  st_voronoi() |> 
+  st_collection_extract("POLYGON") |> 
+  st_intersection(mtq_u) |> 
+  st_sf() |> 
+  st_join(mtq_c, st_intersects) |>
+  st_cast("MULTIPOLYGON") |>
+  st_geometry() |>
+  plot(col = "ivory4")
+```
+
+
+
+
+
+## terra (et stars)
+
+
+
+
+## Perspectives
+
+# OpenStreetMap 
+
+## OpenStreetMap  
+
+::: columns
+
+::: {.column width="20%"}
+![](img/Openstreetmap_logo.svg.png)
+Une base de données cartographique libre et contributive.  
+:::
+
+::: {.column width="40%"}
+
+**Conditions d'utilisation**  
+
+> OpenStreetMap est en *données libres* : vous êtes libre de l’utiliser dans n’importe quel but tant que vous créditez OpenStreetMap et ses contributeurs. Si vous modifiez ou vous appuyez sur les données d’une façon quelconque, vous pouvez distribuer le résultat seulement sous la même licence. (...)
+
+**Contributeurs**   
+
+> (...) Nos contributeurs incluent des cartographes enthousiastes, des professionnels du SIG, des ingénieurs qui font fonctionner les serveurs d’OSM, des humanitaires cartographiant les zones dévastées par une catastrophe et beaucoup d’autres. (...)
+
+:::
+
+::: {.column width="40%"}
+**Couverture/complétude**
+
+* Données France : 4,1 GB  
+* Données Chine : 0,99 GB  
+* Données Afrique : 5,8 GB  
+
+
+
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/7sC83j6vzjo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+:::
+:::
+
+
+:::aside
+Source : [https://www.openstreetmap.org/about](https://www.openstreetmap.org/about) & [Geofabrik](http://download.geofabrik.de/) (06/2023)
+
+:::
+
+
+# Acquisition de données
+
+## Données vecteur
+
+rnaturalearth, osmdata
+
+
+## Données raster
+
+rgee, getData, elevatr ...
+
+
+
+# Cartographie thématique
+
+
+## Les packages principaux
+
+- **`tmap`** [@R-tmap]
+- `ggplot2` + `ggspatial` [@R-ggspatial]
+- **`mapsf`** [@R-mapsf] remplace `cartography` [@R-cartography]
+
+
+
+D'autres packages plus anecdotiques : `mapmisc`, `choropletr`, `oceanis`... 
+
+
+
+
+## Raster
+
+![](img/hypso-1.png)
+
+- `terra` 
+- 2022 : `tidyterra` (Diego Hernangómez)  
+- `tmap` / `mapsf`
+
+
+
+
+::: {.attribution}
+[Site web de `tidyterra`](https://dieghernan.github.io/tidyterra/articles/tidyterra.html)
+:::
+
+
+
+## Cartographie interactive
+
+- 2015 : `leaflet` (Joe Cheng et al.), repose sur la librairie javascript `leaflet`.
+- 2015 : `mapview` (Tim Appelhans et al.), repose sur le package `leaflet`.
+- 2018 : `mapdeck` (David Cooley), repose sur les librairies `Mapbox GL` et `Deck.gl`
+- `tmap`
+
+
+
+## Palettes de couleurs
+
+
+De nombreuses palettes sont disponibles dans R-base.   
+
+![](img/swatch-plot-1.svg)
+
+
+
+Au moins 70 (soixante-dix !) packages proposent des palettes.
+
+- 2018 : `paletteer` (Emil Hvitfeldt) (2568 palettes !!!)
+- 2023 : `cols4all`	(Martijn Tennekes)
+
+
+
+## Misc
+
+* `rayshader` pour créer des cartes en 3D.   
+
+![](img/ray1.png)  
+
+
+
+::: {.aside} 
+[Site web de `rayshader`](https://www.rayshader.com/)  
+:::
+
+
+
+
+## Misc
+- `tanaka`
+![](img/tanaka.png)
+
+
+## Misc
+- `linemap`
+
+
+![](img/linemap.png)  
+
+## Misc
+- `fisheye`
+
+
+
+![](img/img000001.png) ![](img/img000100.png)  ![](img/mob.gif)
+
+
+## Misc
+- `cartogram`
+
+
+![](img/map1.png)  ![](img/map3.png)  
+
+![](img/map4.png)  ![](img/map5.png)
+
+
+::: aside
+Voir aussi [cartogramR: Continuous Cartogram](https://CRAN.R-project.org/package=cartogramR) de Pierre-André Cornillon et Florent Demoraes.
+:::
+
+
+
+
+
+## Ressources
+
+[Geocomputation with R](https://r.geocompx.org/) - @lovelace2019
+
+[Spatial Data Science with applications in R](https://r-spatial.org/book/) - @pebesma2023
+
+[Spatial Data Science with R and "terra"](https://rspatial.org/) - Robert J. Hijmans
+
+[Progress in the R ecosystem for representing and handling spatial data](https://link.springer.com/article/10.1007/s10109-020-00336-0) - @bivand2021
+
+[Cartographie avec R](https://rcarto.github.io/cartographie_avec_r/) - @Giraud_Cartographie_avec_R_2023
+
+[Géomatique avec R](https://rcarto.github.io/geomatique_avec_r/) - @Giraud_Geomatique_avec_R_2023
+
+[CRAN Task View: Analysis of Spatial Data](https://cran.r-project.org/web/views/Spatial.html)
+
+[R Special Interest Group on using Geographical data and Mapping](https://stat.ethz.ch/mailman/listinfo/r-sig-geo) (mailing list)
+
+## Bibliographie {.scrollable}
