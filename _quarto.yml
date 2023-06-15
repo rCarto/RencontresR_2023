@@ -1,2 +1,4 @@
 project:
-  output-dir: docs
+  output-dir: docs/
+  lib-dir: libs/
+  

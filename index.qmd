@@ -35,9 +35,8 @@ knitr:
     fig.path: "figs/"
     cache.path: "cache/"
     comment: "" 
-output-dir: docs
 standalone: true
-highlight-style: atom-one
+highlight-style: kate
 ---
 
 
@@ -183,19 +182,39 @@ gt(data = ref[,c("Type", "sf", "stars", "terra", "raster", "rgdal", "rgeos")], )
 
 ## Le package `sf` {.nostretch}
 
-<img src="img/logo_sf.gif" align="right" width="150px"/>
 
+::: columns
 
+::: {.column width="20%"}
+
+![](img/logo_sf.gif)
 
 Publié fin 2016 par Edzer Pebesma. 
 
- - import / export
- - manipulation 
- - affichage 
- 
-Des objets simples (standard [*simple feature*](https://en.wikipedia.org/wiki/Simple_Features)) dont la manipulation est assez aisée. 
 
-Compatibilité du package avec les *pipe* (`|>` ou `%>%`) et les opérateurs du `tidyverse`.
+:::
+
+::: {.column width="50%"}
+![© Allison Horst, 2018](img/sf_nice.jpg)
+:::
+
+::: {.column width="30%"}
+**Principales fonctionnalités**
+
+* import / export
+* affichage
+* géotraitements
+* support des données non projetées (sur le globe)
+* utilisation du standard [*simple feature*](https://en.wikipedia.org/wiki/Simple_Features)
+- compatibilité avec le *pipe*  
+(`|>` ou `%>%`)
+- compatibilité avec les opérateurs du `tidyverse`. 
+
+
+
+:::
+:::
+
 
 
 ```{r knit_init}
@@ -331,113 +350,257 @@ mtq_c |>
 
 ```
 
-## Le package `terra` {.nostretch}
 
-# Acquisition de données
+## Le package `terra`
 
-## Données vecteurx
-rnaturalearth, osmdata
+::: columns
 
-## Données rasterx
-rgee, getData, elevatr ...
+::: {.column width="20%"}
+
+![](img/logo_terra.png)
+
+Le package `terra` permet de gérer des données vectorielles et surtout **raster**. 
+
+Il succède au package `raster` [@R-raster] du même auteur.
+
+
+:::
+
+::: {.column width="50%"}
+![[rspatial.org](https://rspatial.org/rs/2-exploration.html#single-band-and-composite-maps)](img/terra-multi.png)
+:::
+
+::: {.column width="30%"}
+**Principales fonctionnalités**
+
+- Affichage
+- Modifications de la zone d'étude (projection, crop, mask, agrégation, fusion...)
+- Algèbre spatial (opérations locales, focales, globales, zonales)
+- Transformation et conversion (rasterisation, vectorisation)
 
 
 
-# Cartographie thématique
+:::
+:::
 
-## Les packages principaux
 
-- **`tmap`** [@R-tmap]
-- `ggplot2` + `ggspatial` [@R-ggspatial]
-- **`mapsf`** [@R-mapsf] remplace `cartography` [@R-cartography]
+## Import des données
+
+```{r config_tera}
+#| include: false
+knitr::opts_chunk$set(fig.width=6, fig.height=6)
+```
+
+
+```{r import_terra}
+#| layout-ncol: 2
+#| code-line-numbers: 2-3
+#| cache: false
+library(terra)
+alt_raw <- rast("data/altitude.tif") 
+com <- vect("data/com46.gpkg", layer="com")
+plot(alt_raw)
+plot(com)
+```
+
+## Reprojection
+
+```{r reproj_terra}
+#| code-line-numbers: "1"
+#| cache: false
+alt <- project(x = alt_raw, y = "EPSG:2154", method = "bilinear")
+plot(alt)
+plot(com, add = TRUE)
+```
+
+## Crop
+
+```{r crop-terra}
+#| code-line-numbers: "2"
+#| cache: false
+cahors <- subset(com, com$INSEE_COM == "46042") 
+alt_crop <- crop(alt, cahors)
+plot(alt_crop)
+plot(cahors, add=TRUE)
+```
+
+
+
+## Mask
+
+```{r mask_terra}
+#| cache: false
+#| code-line-numbers: "1"
+alt_mask <- mask(alt_crop, cahors)
+plot(alt_mask)
+plot(cahors, add=TRUE)
+```
+
+
+## Extract
+
+```{r extract_terra}
+#| code-line-numbers: "1"
+stat_by_com <- extract(alt, com, fun = "min")
+head(stat_by_com)
+```
+
+
+# Cartographie 
+
+## Cartographie thématique
+
+::: columns
+::: {.column width="33%"}
+![](img/logo_tmap.png){width="240px"}  
+`tmap` [@R-tmap]
+:::
+::: {.column width="33%"} 
+![](img/logo_ggplot2.png){width="240px"}   
+`ggplot2` + `ggspatial` [@R-ggspatial]
+:::
+::: {.column width="33%"}
+![](img/logo_mapsf.png){width="240px"}  
+`mapsf` [@R-mapsf]
+:::
+:::
 
 D'autres packages plus anecdotiques : `mapmisc`, `choropletr`, `oceanis`... 
 
-## Le package `mapsf` <img src="img/logo_mapsf.png" align="right" width="150px"/> {.nostretch}
+## Le package `mapsf` 
 
-`mapsf` permet de créer la plupart des types de carte utilisés habituellement en cartographie statistique.  
- 
-`mapsf` est le successeur de [`cartography`](http://riatelab.github.io/cartography/docs/) [@R-cartography], il offre les mêmes fonctionnalités principales tout en étant plus léger et plus ergonomique.
+::: columns
 
-![Chaîne de traitement typique](img/workflow.png)
+::: {.column width="20%"}
+![](img/logo_mapsf.png)
 
-## Doc et arguments principaux
+`mapsf` offre la plupart des types de carte utilisés habituellement.  
 
-## Les types de carte
+Successeur de `cartography` [@R-cartography].
+:::
 
-::: {.r-stack}
+::: {.column width="40%"}
+`mf_map()` est la fonction principale.
 
-![](img/map01.png)
+```r
+mf_map(x = objet_sf,
+       var = "variable",
+       type = "map type",
+       ...)
+```
 
-::: {.fragment}
-![](img/map02.png)
+![](img/website.png)
+
 :::
-::: {.fragment}
-![](img/map03.png)
+
+::: {.column width="40%"}
+**Fonctionnalités principales**
+      
+      * 9 types de cartes
+      * Habillage de la carte
+      * Export
+      * Thèmes
+      * Insets
+      * Labels
+
+
+![](img/mapsf_cheatsheet.png)
 :::
-::: {.fragment}
-![](img/map04.png)
+
 :::
-::: {.fragment}
-![](img/map05.png)
-:::
-::: {.fragment}
-![](img/map06.png)
-:::
-::: {.fragment}
-![](img/map07.png)
-:::
-::: {.fragment}
-![](img/map08.png)
-:::
-::: {.fragment}
-![](img/map09.png)
-:::
-:::
+
 
 
 ## Utilisation simple
-<small>
-```{r mapsf_simple}
+```{r mapsf_simple1}
+#| fig-width: 5
+#| fig.height: 6
+#| output-location: column-fragment
+#| code-line-numbers: 1-3|4-5
+library(mapsf)
+# Import the sample dataset
+mtq <- mf_get_mtq()
+# Plot the base map
+mf_map(x = mtq)
+```
+
+
+## Utilisation simple
+```{r mapsf_simple3}
 #| fig-width: 5
 #| fig.height: 6
 #| output-location: column
+#| code-line-numbers: 6-12
 library(mapsf)
 # Import the sample dataset
 mtq <- mf_get_mtq()
 # Plot the base map
 mf_map(x = mtq)
 # Plot proportional symbols
-mf_map(x = mtq, var = "POP", type = "prop")
+mf_map(
+  x = mtq,
+  var = "POP",
+  type = "prop", 
+  leg_title = "Population"
+)
+
+```
+
+
+## Utilisation simple
+```{r mapsf_simple4}
+#| fig-width: 5
+#| fig.height: 6
+#| output-location: column
+#| code-line-numbers: 13-20
+library(mapsf)
+# Import the sample dataset
+mtq <- mf_get_mtq()
+# Plot the base map
+mf_map(x = mtq)
+# Plot proportional symbols
+mf_map(
+  x = mtq,
+  var = "POP",
+  type = "prop", 
+  leg_title = "Population"
+)
 # Plot a map layout
 mf_layout(
   title = "Population in Martinique", 
-  credits = "T. Giraud; Sources: INSEE & IGN, 2018"
+  credits = 
+    paste0("T. Giraud;",  
+           "Sources: INSEE & IGN, 2018"
+    )
 )
-```
-</small>
 
+```
 
 ## Utilisation avancée
 ::: columns
 ::: {.column width="50%"}
-<small>
 ```{r mapsf_avance}
 #| results: hide
 #| code-overflow: scroll
-# Export a map with a theme and extra margins 
-mf_export(x = mtq, filename = "img/mtq.svg",  width = 5, 
-          theme = "green", expandBB = c(0,0,0,.3)) 
+# Export a map with a theme and extra margins
+mf_theme("agolalight", bg = "ivory1")
+mf_export(
+  x = mtq, filename = "img/mtq.png",
+  width = 600, res = 120,
+  expandBB = c(0, 0, 0, .3)
+)
 # Plot a shadow
-mf_shadow(mtq, col = "grey10", add = TRUE)
+mf_shadow(mtq, col = "grey90", add = TRUE)
 # Plot a choropleth map
-mf_map(x = mtq, var = "MED", type = "choro",
-       pal = "Dark Mint", 
-       breaks = "quantile", 
-       nbreaks = 6, 
-       leg_title = "Median Income\n(euros)", 
-       leg_val_rnd = -2, 
-       add = TRUE)
+mf_map(
+  x = mtq, var = "MED", type = "choro",
+  pal = "Dark Mint",
+  breaks = "quantile",
+  nbreaks = 6,
+  leg_title = "Median Income\n(euros)",
+  leg_val_rnd = -2,
+  add = TRUE
+)
 # Start an inset map
 mf_inset_on(x = "worldmap", pos = "right")
 # Plot mtq position on a worldmap
@@ -451,21 +614,68 @@ mf_credits("T. Giraud\nSources: INSEE & IGN, 2018")
 # Plot a scale bar
 mf_scale(size = 5)
 # Plot a north arrow
-mf_arrow('topleft')
+mf_arrow("topleft")
 dev.off()
 ```
-</small>
 :::
 ::: {.column width="50%"}
-![](img/mtq.svg)
+![](img/mtq.png)
 :::
 :::
+
+
 ## Cartographie interactive
 
-- 2015 : `leaflet` (Joe Cheng et al.), repose sur la librairie javascript `leaflet`.
-- 2015 : `mapview` (Tim Appelhans et al.), repose sur le package `leaflet`.
-- 2018 : `mapdeck` (David Cooley), repose sur les librairies `Mapbox GL` et `Deck.gl`
-- `tmap`
+::: columns
+::: {.column width="33%"}
+![](img/logo_leaflet.png){width="240px"}  
+`leaflet` [@R-leaflet], repose sur la bibliothèque JS leaflet
+:::
+::: {.column width="33%"} 
+![](img/logo_mapview.gif){width="240px"}   
+`mapview` [@R-mapview], repose sur le package `leaflet`
+:::
+::: {.column width="33%"}
+![](img/mapdeck.gif){width="240px"}  
+`mapdeck` [@R-mapdeck], repose sur les bibliothèques JS Mapbox GL et Deck.gl
+:::
+:::
+
+`tmap` dispose d'un mode interactif (qui utilise le package `leaflet`)
+
+
+## Cartographie interactive
+
+```{r mapview}
+#| cache: false
+library(mapview)
+mapview(mtq)
+
+```
+
+## Fond de carte
+
+Plusieurs packages permettent de télécharger des fonds de carte (raster) depuis un certain nombre de providers. 
+
+```{r}
+#| eval: false
+library(maptiles)
+get_tiles()
+
+```
+
+There are many alternative packages that pursue the same objective as maptiles. Some focus on a specific map tiles provider (e.g. mapbox, google, OpenStreetMap) or on a specific graphics device (ggplot2). The goal of maptiles is to be flexible enough to allow the use of different providers and to have a minimal number of robust and modern dependencies. However, depending on the use case, one of following packages may better suit your needs:
+
+    ceramic
+    ggmap (ggplot2 focused)
+    ggspatial (ggplot2 focused, based on rosm)
+    mapboxapi (mapbox)
+    mapsapi (google, based on RgoogleMaps)
+    OpenStreetMap (requires Java)
+    RgoogleMaps (google)
+    rosm
+    …
+
 
 
 ## Palettes de couleurs
@@ -491,12 +701,27 @@ dev.off()
 
 
 
+# Analyse spatiale / statistique spatiale
+
+## Statistiques spatiales {.nostretch}
+
+- `spatstat` : Analyse statistique de semis de points
+- `gstat` : Variogram et Krigeage
+- `rgeoda` : Geoda avec R
+- `GWmodel`, `spgwr` : Geographically Weighted Models
+- ...
+
+::: {.callout-tip title="Session Geospatial à 11h!"}
+![](img/sessiongeo.png)
+:::
+
+::: aside
+[CRAN Task View: Analysis of Spatial Data](https://cran.r-project.org/web/views/Spatial.html)
+:::
 
 
+## 
 
-
-
-## Perspectives
 
 # OpenStreetMap x
 
@@ -542,10 +767,14 @@ Source : [https://www.openstreetmap.org/about](https://www.openstreetmap.org/abo
 
 :::
 
+
+
+
+
 ## Acquisition des données 
 
 Le package `osmdata` LOGO, permet d'extraire des données depuis OpenStreetMap.
-```{r}
+```{r data-dwld}
 #| cache: true
 #| code-fold: true
 #| code-summary: "Acquisition des données OSM"
@@ -576,7 +805,7 @@ green <- opq(bbox = bb)|>
   add_osm_features(features = list(
     "leisure" = c("park", "garden"),
     "landuse" = c("cemetery", "grass", "forest"))
-    ) |>
+  ) |>
   osmdata_sf() |>
   unique_osmdata()
 
@@ -685,8 +914,8 @@ mf_legend(type = "symb", pos = "bottomright2", val = c("Hotels", "Restaurants"),
 dev.off()
 ```
 
-## {.nostretch}
-![](img/avignon.png){width="800px"}
+## Avignon 
+![](img/avignon.png)
 
 
 ## Ressources
