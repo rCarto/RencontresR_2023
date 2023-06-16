@@ -134,6 +134,10 @@ Des bibliothèques géographiques largement utilisées :
 ![[Upcoming changes to popular R packages for spatial data: what you need to do](https://geocompx.org/post/2023/rgdal-retirement/)](img/rgdal_jak.png)
 
 ## rgdal, rgeos, maptools
+
+::: columns
+::: {.column width="65%"}
+
 Pour accompagner le processus d'archivage des packages :
 
 - Une série de posts de blog (avril 2022, décembre 2022, avril 2023, mai 2023)
@@ -148,8 +152,8 @@ Pour accompagner le processus d'archivage des packages :
 library(rgeos)
 ```
 </small>
-
-## rgdal, rgeos, maptools {.nostretch}
+:::
+::: {.column width="35%"}
 
 ```{r rev_dep}
 #| echo: false
@@ -179,7 +183,8 @@ gt(data = ref[,c("Type", "sf", "stars", "terra", "raster", "rgdal", "rgeos")], )
   tab_source_note("Source : CRAN, 14 juin 2023")
 ```
 
-
+:::
+:::
 ## Le package `sf` {.nostretch}
 
 
@@ -220,12 +225,11 @@ Publié fin 2016 par Edzer Pebesma.
 ```{r knit_init}
 #| include: false
 #| cache: false
-knitr::knit_hooks$set(nm = function(before, options, envir){
+knitr::knit_hooks$set(nomar = function(before, options, envir){
   if (before){
     par(mar=c(0,0,0,0))
   } 
 })
-knitr::opts_chunk$set(nm=TRUE, echo=TRUE)
 ```
 
 ## Format {.nostretch}
@@ -254,11 +258,14 @@ Les principaux formats de fichier sont pris en charge
 ## Affichage 
 ```{r sf_plot_multi}
 #| fig-height: 2
+#| nomar: true
+
 plot(mtq)
 ```
 
 ```{r sf_plot}
 #| fig-height: 2
+#| nomar: true
 plot(st_geometry(mtq))
 ```
 
@@ -267,6 +274,7 @@ plot(st_geometry(mtq))
 
 ```{r sf_centro}
 #| warning: false
+#| nomar: true
 #| code-line-numbers: "1"
 mtq_c <- st_centroid(mtq)
 plot(st_geometry(mtq))
@@ -287,6 +295,7 @@ mat[1:5, 1:5]
 
 ```{r sf_agg}
 #| code-line-numbers: "1"
+#| nomar: true
 mtq_u <- st_union(mtq)
 plot(st_geometry(mtq), col = "lightblue")
 plot(st_geometry(mtq_u), lwd = 2, border = "red", add = TRUE)
@@ -296,6 +305,7 @@ plot(st_geometry(mtq_u), lwd = 2, border = "red", add = TRUE)
 
 ```{r sf_buff}
 #| code-line-numbers: "1"
+#| nomar: true
 mtq_b <- st_buffer(x = mtq_u, dist = 5000)
 plot(st_geometry(mtq_b), col = "grey", lwd = 2, border = "red")
 plot(st_geometry(mtq), col = "lightblue", add = TRUE)
@@ -308,6 +318,7 @@ plot(st_geometry(mtq_u), lwd = 2, add = TRUE)
 ```{r sf_interse}
 #| echo: false
 #| fig-height: 14
+#| nomar: true
 m <- rbind(c(700015,1624212), c(700015,1641586), 
            c(719127,1641586), c(719127,1624212), 
            c(700015,1624212))
@@ -321,6 +332,7 @@ text(719127,1641586, "p", pos = 4, cex = 3)
 ::: {.column width="60%"}
 ```{r sf_intersect2}
 #| warning: false
+#| nomar: true
 #| layout-ncol: 2
 #| fig-height: 10
 #| code-line-numbers: "1"
@@ -337,6 +349,7 @@ plot(st_geometry(mtq_z), lwd = 2)
 ## Polygones de Voronoi
 
 ```{r sf_voronoix}
+#| nomar: true
 mtq_c |> 
   st_union() |> 
   st_voronoi() |> 
@@ -492,16 +505,17 @@ mf_map(x = objet_sf,
 ![](img/website.png)
 
 :::
-
-::: {.column width="40%"}
+::: {.column width="3%"}
+:::
+::: {.column width="37%"}
 **Fonctionnalités principales**
       
-      * 9 types de cartes
-      * Habillage de la carte
-      * Export
-      * Thèmes
-      * Insets
-      * Labels
+* 9 types de cartes
+* Habillage (échelle, flèche nord...)
+* Export (png et svg)
+* Thèmes
+* Insets
+* Labels
 
 
 ![](img/mapsf_cheatsheet.png)
@@ -653,28 +667,59 @@ mapview(mtq)
 
 ```
 
+## Cartographie interactive avec shiny 
+
+<iframe width="800" height="500" src="https://rcarto.shinyapps.io/cityguess/"></iframe>
+
+[rcarto.shinyapps.io/cityguess](https://rcarto.shinyapps.io/cityguess/)
+
+
 ## Fond de carte
 
-Plusieurs packages permettent de télécharger des fonds de carte (raster) depuis un certain nombre de providers. 
+::: columns
 
+::: {.column width="20%"}
+![](img/logo_maptiles.png)
+Le package `maptiles` [@R-maptiles] permet de télécharger des fonds de carte (raster). 
+:::
+
+::: {.column width="60%"}
 ```{r}
-#| eval: false
+#| nomar: true
+#| out-height: "100%"
+#| out-width: "100%"
 library(maptiles)
-get_tiles()
-
+bbox <- terra::ext(c(xmin = 4.795, xmax = 4.825,
+                     ymin = 43.94, ymax = 43.955))
+tiles <- get_tiles(x = bbox, 
+                   project = FALSE, 
+                   crop = TRUE, 
+                   zoom = 15, 
+                   cachedir = "cache")
+plot_tiles(tiles)
 ```
 
-There are many alternative packages that pursue the same objective as maptiles. Some focus on a specific map tiles provider (e.g. mapbox, google, OpenStreetMap) or on a specific graphics device (ggplot2). The goal of maptiles is to be flexible enough to allow the use of different providers and to have a minimal number of robust and modern dependencies. However, depending on the use case, one of following packages may better suit your needs:
 
-    ceramic
-    ggmap (ggplot2 focused)
-    ggspatial (ggplot2 focused, based on rosm)
-    mapboxapi (mapbox)
-    mapsapi (google, based on RgoogleMaps)
-    OpenStreetMap (requires Java)
-    RgoogleMaps (google)
-    rosm
-    …
+:::
+
+::: {.column width="20%"}
+**Alternatives**
+
+* `ceramic`
+* `ggmap` (`ggplot2` focused)
+* `ggspatial` (`ggplot2` focused, based on `rosm`)
+* `mapboxapi` (mapbox)
+* `mapsapi` (google, based on `RgoogleMaps`)
+* `OpenStreetMap` (requires Java)
+* `RgoogleMaps` (google)
+* `rosm`
+* …
+
+
+:::
+:::
+
+
 
 
 
@@ -712,7 +757,7 @@ There are many alternative packages that pursue the same objective as maptiles. 
 - ...
 
 ::: {.callout-tip title="Session Geospatial à 11h!"}
-![](img/sessiongeo.png)
+![](img/sessiongeo.png){.nostretch}
 :::
 
 ::: aside
@@ -720,10 +765,48 @@ There are many alternative packages that pursue the same objective as maptiles. 
 :::
 
 
-## 
+# Accessibilité des restaurants et des hotels dans le centre d'Avignon
+
+## Acquisition des données 
+
+::: columns
+
+::: {.column width="30%"}
+
+![](img/logo_osmdata.png){height=210 width=182}
+
+Le package `osmdata` [@R-osmdata] utilise l'API du service [Overpass turbo](https://overpass-turbo.eu/) pour extraire des données de la BD OpenStreetMap.  
+Nous utilisons le [système de clef/valeur d'OSM](https://wiki.openstreetmap.org/wiki) pour construire la requête.
 
 
-# OpenStreetMap x
+:::
+
+::: {.column width="70%"}
+```{r}
+#| include: false
+#| cache: false
+mapsf::mf_theme(mar = c(0,0,0,0))
+```
+
+```{r osm_download1}
+#| cache: true
+#| fig-width: 3
+#| fig-height: 3
+#| fig-align: center
+library(mapsf)
+library(osmdata)
+(bbox_avignon <- getbb("Avignon, Quartier Centre"))
+resto <-  bbox_avignon |> 
+  opq(osm_types = "node")|>
+  add_osm_feature(key = 'amenity', value = "restaurant") |>
+  osmdata_sf() |>
+  _$osm_points
+mf_map(resto)
+```
+
+:::
+:::
+
 
 ## OpenStreetMap  
 
@@ -740,7 +823,7 @@ Une base de données cartographique libre et contributive.
 
 > OpenStreetMap est en *données libres* : vous êtes libre de l’utiliser dans n’importe quel but tant que vous créditez OpenStreetMap et ses contributeurs. Si vous modifiez ou vous appuyez sur les données d’une façon quelconque, vous pouvez distribuer le résultat seulement sous la même licence. (...)
 
-**Contributeurs**   
+**Contributions**   
 
 > (...) Nos contributeurs incluent des cartographes enthousiastes, des professionnels du SIG, des ingénieurs qui font fonctionner les serveurs d’OSM, des humanitaires cartographiant les zones dévastées par une catastrophe et beaucoup d’autres. (...)
 
@@ -771,10 +854,70 @@ Source : [https://www.openstreetmap.org/about](https://www.openstreetmap.org/abo
 
 
 
-## Acquisition des données 
+## Densité des restaurants
 
-Le package `osmdata` LOGO, permet d'extraire des données depuis OpenStreetMap.
+Pour modéliser les variations de densités de restaurants dans le centre ville d'Avignon nous pouvons utiliser la méthode de lissage par noyaux (KDE) grâce au package `spatstat` [@R-spatstat].
+
+
+```{r kde_step1}
+#| message: false
+#| warning: false
+#| cache: false
+library(sf)
+library(spatstat)
+resto <- st_transform(resto, "EPSG:2154")
+p <- as.ppp(X = st_coordinates(resto), 
+            W = as.owin(st_bbox(resto)))
+ds <- density(x = p, sigma = 50, eps = 10)
+plot(ds)
+
+```
+
+
+
+## Densité des restaurants {.scrollable}
+
+On peut amélioré la représentation des résultats en téléchargeant les tuiles OSM de la région et en transformant l'image produite en polygones isoplèthes.
+
+```{r}
+#| eval: false
+library(terra)
+r <- rast(ds) * 100 * 100
+crs(r) <- st_crs(resto)$wkt
+maxval <- max(values(r))
+bks <-  unique(c(seq(0, floor(maxval), 2), maxval))
+library(mapiso)
+iso_dens <- mapiso::mapiso(r, breaks = bks)
+library(maptiles)
+tiles <- get_tiles(iso_dens, zoom = 15, crop = T, cachedir = "cache")
+library(mapsf)
+mf_theme(mar = c(0,0,0,0))
+mf_export(tiles, filename = "img/avignon_dens.png", 
+          width = ncol(tiles), height = nrow(tiles))
+mf_raster(tiles, add = TRUE)
+mf_map(iso_dens[-1, ], "isomin", "choro",
+       breaks = bks[-1], border = "white",
+       pal = "Burg", alpha = .5,
+       leg_pos = "bottomright1",
+       leg_frame = TRUE, leg_val_rnd = 1,
+       leg_title = paste0("Densité de restaurants dans\n",
+                          "un voisinage gaussien (σ = 50m),\n",
+                          "en restaurants par hectare"),
+       add = TRUE)
+mf_title("Avignon", inner = TRUE)
+mf_credits("T. Giraud, 2023\nOpenStreetMap contributors, 2023", bg = "white")
+mf_scale(100, unit = "m")
+mf_arrow(pos = "topright")
+dev.off()
+```
+
+##
+![](img/avignon_dens.png)
+
+##
+
 ```{r data-dwld}
+#| eval: false
 #| cache: true
 #| code-fold: true
 #| code-summary: "Acquisition des données OSM"
@@ -889,9 +1032,11 @@ hotel_poly <- rbind(tourism$osm_polygons[, "name"],
 hotel <- rbind(hotel_points, hotel_poly)
 ```
 
-##
-
 ```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Cartographie"
+library(sf)
 library(mapsf)
 mf_theme("candy", fg = "#393939")
 mf_export(center, "img/avignon.png", width = 800)
@@ -914,13 +1059,13 @@ mf_legend(type = "symb", pos = "bottomright2", val = c("Hotels", "Restaurants"),
 dev.off()
 ```
 
-## Avignon 
 ![](img/avignon.png)
 
 
 ## Ressources
 
-[Geocomputation with R](https://r.geocompx.org/) - @lovelace2019
+[Geocomputation with R](https://r.geocompx.org/) - @lovelace2019  
+[Geocomputation with R](https://r.geocompx.org/fr/) - Première partie en français 
 
 [Spatial Data Science with applications in R](https://r-spatial.org/book/) - @pebesma2023
 
