@@ -35,7 +35,6 @@ knitr:
     fig.path: "figs/"
     cache.path: "cache/"
     comment: "" 
-standalone: true
 highlight-style: kate
 ---
 
@@ -478,7 +477,7 @@ head(stat_by_com)
 :::
 :::
 
-D'autres packages plus anecdotiques : `mapmisc`, `choropletr`, `oceanis`... 
+D'autres packages : `mapmisc`, `choropletr`, `oceanis`... 
 
 ## Le package `mapsf` 
 
@@ -591,8 +590,10 @@ mf_layout(
 ```
 
 ## Utilisation avancée
+
 ::: columns
 ::: {.column width="50%"}
+<small>
 ```{r mapsf_avance}
 #| results: hide
 #| code-overflow: scroll
@@ -631,6 +632,7 @@ mf_scale(size = 5)
 mf_arrow("topleft")
 dev.off()
 ```
+</small>
 :::
 ::: {.column width="50%"}
 ![](img/mtq.png)
@@ -655,26 +657,40 @@ dev.off()
 :::
 :::
 
-`tmap` dispose d'un mode interactif (qui utilise le package `leaflet`)
+`tmap` dispose d'un mode interactif (qui s'appuie sur le package `leaflet` aussi).
 
 
 ## Cartographie interactive
 
-```{r mapview}
+```{r mapview_true}
 #| cache: false
+#| include: false
+library(mapview)
+x <- mapview(mtq)
+dir.create("html", showWarnings = F)
+mapshot(x, url = "html/map.html")
+```
+
+```{r mapview_fake}
+#| cache: true
+#| echo: true
+#| eval: false
 library(mapview)
 mapview(mtq)
 
 ```
+<iframe src="html/map.html" width="500px" height="450px"></iframe>
+
+
 
 ## Cartographie interactive avec shiny 
 
-<iframe width="800" height="500" src="https://rcarto.shinyapps.io/cityguess/"></iframe>
+![](img/cityguess.png)
 
 [rcarto.shinyapps.io/cityguess](https://rcarto.shinyapps.io/cityguess/)
 
 
-## Fond de carte
+## Fond de carte {.nostretch}
 
 ::: columns
 
@@ -685,10 +701,10 @@ Le package `maptiles` [@R-maptiles] permet de télécharger des fonds de carte (
 
 ::: {.column width="60%"}
 ```{r}
-#| nomar: true
-#| out-height: "100%"
-#| out-width: "100%"
+#| include: false
+#| eval: false
 library(maptiles)
+library(terra)
 bbox <- terra::ext(c(xmin = 4.795, xmax = 4.825,
                      ymin = 43.94, ymax = 43.955))
 tiles <- get_tiles(x = bbox, 
@@ -696,8 +712,34 @@ tiles <- get_tiles(x = bbox,
                    crop = TRUE, 
                    zoom = 15, 
                    cachedir = "cache")
-plot_tiles(tiles)
+library(mapsf)
+mf_theme(mar = c(0,0,0,0))
+mf_export(x = tiles, filename = "img/tiles.png", 
+          width = ncol(tiles), height = nrow(tiles))
+mf_raster(tiles, add = T)
+mf_credits(maptiles::get_credit("OpenStreetMap"), bg = "white")
+dev.off()
+
 ```
+
+```{r}
+#| eval: false
+#| code-line-numbers: 1,6-10
+library(maptiles)
+library(terra)
+library(mapsf)
+bbox <- terra::ext(c(xmin = 4.795, xmax = 4.825,
+                     ymin = 43.94, ymax = 43.955))
+tiles <- get_tiles(x = bbox, 
+                   project = FALSE, 
+                   crop = TRUE, 
+                   zoom = 15, 
+                   cachedir = "cache")
+mf_raster(tiles)
+mf_credits(get_credit("OpenStreetMap"), bg = "white")
+```
+ ![](img/tiles.png){width="350" height="243"}
+
 
 
 :::
@@ -865,56 +907,116 @@ Pour modéliser les variations de densités de restaurants dans le centre ville 
 #| cache: false
 library(sf)
 library(spatstat)
-resto <- st_transform(resto, "EPSG:2154")
+resto <- st_transform(resto, "EPSG:3857")
 p <- as.ppp(X = st_coordinates(resto), 
             W = as.owin(st_bbox(resto)))
-ds <- density(x = p, sigma = 50, eps = 10)
+ds <- density.ppp(x = p, sigma = 50, eps = 10, positive = TRUE)
 plot(ds)
 
 ```
 
 
-
 ## Densité des restaurants {.scrollable}
 
-On peut amélioré la représentation des résultats en téléchargeant les tuiles OSM de la région et en transformant l'image produite en polygones isoplèthes.
+On peut améliorer la représentation des résultats en les superposant à un fond de carte raster.  
 
 ```{r}
-#| eval: false
+#| eval: true
+#| cache: false
+#| code-fold: true
+#| code-summary: "Transformation de l'image des densités en SpatRaster"
 library(terra)
+# densité en restaurants / hectares
 r <- rast(ds) * 100 * 100
 crs(r) <- st_crs(resto)$wkt
-maxval <- max(values(r))
-bks <-  unique(c(seq(0, floor(maxval), 2), maxval))
-library(mapiso)
-iso_dens <- mapiso::mapiso(r, breaks = bks)
+plot(r)
+```
+
+
+```{r}
+#| eval: true
+#| cache: false
+#| code-fold: true
+#| results: false
+#| code-summary: "Téléchargement des tuiles et superposition"
 library(maptiles)
-tiles <- get_tiles(iso_dens, zoom = 15, crop = T, cachedir = "cache")
 library(mapsf)
-mf_theme(mar = c(0,0,0,0))
-mf_export(tiles, filename = "img/avignon_dens.png", 
-          width = ncol(tiles), height = nrow(tiles))
-mf_raster(tiles, add = TRUE)
-mf_map(iso_dens[-1, ], "isomin", "choro",
+tiles_osm <- get_tiles(r, 
+                       provider = "CartoDB.Positron",
+                       zoom = 15, 
+                       crop = TRUE, 
+                       cachedir = "cache")
+mf_theme(mar = c(0,0,0,0), inner = TRUE)
+mf_export(tiles_osm, filename = "img/avignon_dens1.png", 
+          width = ncol(tiles_osm), height = nrow(tiles_osm))
+mf_raster(tiles_osm, add = TRUE)
+mf_raster(r, alpha = 0.6, add = TRUE)
+mf_map(resto, add = TRUE)
+dev.off()
+```
+![](img/avignon_dens1.png)
+
+Nous pouvons aussi transformer le raster des densités en polygones de plages de densités. 
+```{r}
+#| eval: true
+#| cache: false
+#| code-fold: true
+#| results: false
+#| code-summary: "Transformation du raster en polygones"
+# Limites des classes
+maxval <- max(values(r))
+bks <-  unique(c(seq(0, floor(maxval), 1), maxval))
+library(mapiso)
+iso_dens <- mapiso(r, breaks = bks)
+# Suppression de la première classe ([0, 1[)
+iso_dens <- iso_dens[-1, ]
+
+mf_raster(r)
+mf_map(iso_dens, add = T, col = NA)
+```
+
+```{r}
+#| eval: true
+#| cache: false
+#| code-fold: true
+#| results: false
+#| code-summary: "Cartographie des polygones"
+mf_export(tiles_osm, filename = "img/avignon_dens2.png", 
+          height = nrow(tiles_osm), 
+          expandBB = c(0,0,0,.5))
+mf_raster(tiles_osm, add = TRUE)
+mf_map(iso_dens, var = "isomin", type = "choro",
        breaks = bks[-1], border = "white",
-       pal = "Burg", alpha = .5,
+       pal = "Burg", alpha = .7,
        leg_pos = "bottomright1",
        leg_frame = TRUE, leg_val_rnd = 1,
        leg_title = paste0("Densité de restaurants dans\n",
                           "un voisinage gaussien (σ = 50m),\n",
                           "en restaurants par hectare"),
        add = TRUE)
-mf_title("Avignon", inner = TRUE)
+mf_map(resto, add = TRUE)
 mf_credits("T. Giraud, 2023\nOpenStreetMap contributors, 2023", bg = "white")
-mf_scale(100, unit = "m")
+mf_scale(250, unit = "m")
 mf_arrow(pos = "topright")
+mf_title("Densité des restaurants dans le centre-ville d'Avignon")
 dev.off()
 ```
 
-##
-![](img/avignon_dens.png)
+![](img/avignon_dens2.png)
 
-##
+
+
+## Acquisition de données pour un fond de carte vectorielle {.scrollable}
+
+Nous pouvons aussi utiliser un fond de carte vectoriel.  
+Ici nous allons télécharger et préparer un fonde carte constitué : 
+
+- des espaces verts
+- des surfaces en eaux
+- des routes et rails 
+- des bâtiments
+- des hotels
+
 
 ```{r data-dwld}
 #| eval: false
@@ -942,7 +1044,6 @@ river <- c(st_geometry(water$osm_polygons),
   st_transform(st_crs(center))|>
   st_intersection(center) |>
   st_union()
-
 
 green <- opq(bbox = bb)|>
   add_osm_features(features = list(
@@ -1018,7 +1119,6 @@ tourism <- opq(bbox = bb)|>
   osmdata_sf() |>
   unique_osmdata()
 
-
 hotel_points <- tourism$osm_points[, "name"] |>
   st_set_agr("constant") |>
   st_transform(st_crs(center))|>
@@ -1030,16 +1130,44 @@ hotel_poly <- rbind(tourism$osm_polygons[, "name"],
   st_transform(st_crs(center))|>
   st_intersection(center)
 hotel <- rbind(hotel_points, hotel_poly)
+
+
+st_write(obj = hotel, dsn = "data/avignon.gpkg", layer = "hotel")
+st_write(obj = resto, dsn = "data/avignon.gpkg", layer = "resto")
+st_write(obj = batiments, dsn = "data/avignon.gpkg", layer = "batiments")
+st_write(obj = rail, dsn = "data/avignon.gpkg", layer = "rail")
+st_write(obj = routes, dsn = "data/avignon.gpkg", layer = "routes")
+st_write(obj = esp_vert, dsn = "data/avignon.gpkg", layer = "esp_vert")
+st_write(obj = river, dsn = "data/avignon.gpkg", layer = "river")
+st_write(obj = center, dsn = "data/avignon.gpkg", layer = "center")
+
 ```
 
+
 ```{r}
-#| eval: false
+#| include: false
+center <- st_read(dsn = "data/avignon.gpkg", layer = "center")
+hotel <- st_read(dsn = "data/avignon.gpkg", layer = "hotel")
+resto <- st_read(dsn = "data/avignon.gpkg", layer = "resto")
+batiments <- st_read(dsn = "data/avignon.gpkg", layer = "batiments")
+rail <- st_read(dsn = "data/avignon.gpkg", layer = "rail")
+routes <- st_read(dsn = "data/avignon.gpkg", layer = "routes")
+esp_vert <- st_read(dsn = "data/avignon.gpkg", layer = "esp_vert")
+river <- st_read(dsn = "data/avignon.gpkg", layer = "river")
+```
+
+
+Il suffit maintenant de combiner toutes ces couches pour constituer un fond de carte. 
+
+```{r}
+#| eval: true
 #| code-fold: true
+#| results: false
 #| code-summary: "Cartographie"
 library(sf)
 library(mapsf)
 mf_theme("candy", fg = "#393939")
-mf_export(center, "img/avignon.png", width = 800)
+mf_export(center, "img/avignon.png", width = 768)
 mf_map(center, col = "#f2efe9", border = NA, add = TRUE)
 mf_map(river, col = "#aad3df", border = "#aad3df", lwd = .5, add = TRUE)
 mf_map(esp_vert, col = "#c8facc", border = "#c8facc", lwd = .5, add = TRUE)
@@ -1059,8 +1187,106 @@ mf_legend(type = "symb", pos = "bottomright2", val = c("Hotels", "Restaurants"),
 dev.off()
 ```
 
-![](img/avignon.png)
+![](img/avignon.png){width="5in"}
 
+Nous pouvons maintenant superposer les densités sur ce fond de carte 
+```{r}
+#| eval: true
+#| results: false
+#| code-fold: true
+#| code-summary: "Carte finale"
+iso_dens <- st_transform(iso_dens, st_crs(center))
+library(sf)
+library(mapsf)
+mf_theme("candy", fg = "#393939")
+mf_export(center, "img/avignon_dens3.png", width = 768)
+mf_map(center, col = "#f2efe9", border = NA, add = TRUE)
+mf_map(river, col = "#aad3df", border = "#aad3df", lwd = .5, add = TRUE)
+mf_map(esp_vert, col = "#c8facc", border = "#c8facc", lwd = .5, add = TRUE)
+mf_map(rail, col = "grey50", lty = 2, lwd = .2, add = TRUE)
+mf_map(routes, col = "white", border = "white", add = TRUE)
+mf_map(batiments, col = "#d9d0c9", border = "#c6bab1", lwd = 1, add = TRUE)
+mf_map(iso_dens, var = "isomin", type = "choro",
+       breaks = bks[-1], border = "white",
+       pal = "Burg", alpha = .7,
+       leg_pos = "bottomright1",
+       leg_frame = TRUE, leg_val_rnd = 1,
+       leg_title = paste0("Densité de restaurants dans\n",
+                          "un voisinage gaussien (σ = 50m),\n",
+                          "en restaurants par hectare"),
+       add = TRUE)
+mf_map(resto, col = "white", bg = "#940010", pch = 23, lwd = 1, cex = 1, add = TRUE)
+mf_map(center, col = NA, border = "grey25", lwd = 4, add = TRUE)
+mf_title("Avignon")
+mf_credits("T. Giraud, 2023\nOpenStreetMap contributors, 2023")
+mf_scale(100, unit = "m")
+mf_arrow(pos = "topright")
+dev.off()
+```
+
+![](img/avignon_dens3.png){width="5in"}
+
+
+
+
+## De l'hotel à la conf {.scrollable .nostretch}
+Nous pouvons aussi utiliser un fond de carte vectoriel.  
+Ici nous allons télécharger et préparer un fonde carte constitué : 
+
+- des espaces verts
+- des surfaces en eaux
+- des routes et rails 
+- des bâtiments
+- des hotels
+
+```{r}
+#| code-fold: true
+#| cache: true
+library(osrm)
+library(tidygeocoder)
+conf <- geo("74 rue Louis Pasteur, 84000 Avignon, FRANCE")
+geoconf <- st_as_sf(conf, coords = c("long", "lat"), crs = "EPSG:4326") |>
+  st_transform(st_crs(center))
+
+routes_hotel <- vector("list", nrow(hotel))
+for (i in 1:length(routes_hotel)){
+  routes_hotel[[i]] <- osrmRoute(src = hotel[i, ],
+                                 dst = geoconf,
+                                 overview = "full",
+                                 osrm.profile = 'foot')
+  Sys.sleep(1)
+}
+routes_hotel <- do.call("rbind", routes_hotel)
+
+
+library(stplanr)
+routes_hotel$w <- 1
+routes_hotel_ag <- overline2(routes_hotel, "w")
+
+mf_export(center, "img/avignon_conf.png", width = 500)
+mf_map(center, col = "#f2efe9", border = NA, add = TRUE)
+mf_map(river, col = "#aad3df", border = "#aad3df", lwd = .5, add = TRUE)
+mf_map(esp_vert, col = "#c8facc", border = "#c8facc", lwd = .5, add = TRUE)
+mf_map(rail, col = "grey50", lty = 2, lwd = .2, add = TRUE)
+mf_map(routes, col = "white", border = "white", add = TRUE)
+mf_map(batiments, col = "#d9d0c9", border = "#c6bab1", lwd = 1, add = TRUE)
+mf_map(routes_hotel_ag, "w", "grad",
+       add = TRUE, breaks = c(1,5,10,20,33),
+       lwd = c(2,5,9,13), leg_pos = "topleft", col= "#940000",
+       leg_title = 'Nombre de trajets\nempruntant la voie')
+mf_map(hotel, col = "white", bg = "#000094", pch = 21, lwd = 1, cex = 1, add = TRUE)
+mf_map(geoconf, col = "white", bg = "#646400", pch = 22, lwd = 1, cex = 3, add = TRUE)
+mf_map(center, col = NA, border = "grey25", lwd = 4, add = TRUE)
+mf_title("Avignon")
+mf_credits("T. Giraud, 2023\nOpenStreetMap contributors, 2023")
+mf_scale(100, unit = "m")
+mf_arrow(pos = "topright")
+dev.off()
+
+```
+
+
+![](img/avignon_conf.png)
 
 ## Ressources
 
@@ -1080,5 +1306,8 @@ dev.off()
 [CRAN Task View: Analysis of Spatial Data](https://cran.r-project.org/web/views/Spatial.html)
 
 [R Special Interest Group on using Geographical data and Mapping](https://stat.ethz.ch/mailman/listinfo/r-sig-geo) (mailing list)
+
+## Ressources
+![rzine.fr](img/rzine.png)
 
 ## Bibliographie {.scrollable}
