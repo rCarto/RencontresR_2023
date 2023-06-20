@@ -16,6 +16,8 @@ format:
     show-slide-number: all
     slide-number: true
     code-line-numbers: false
+    width: 1050
+    height: 700
 
 execute:
   echo: true
@@ -34,6 +36,7 @@ knitr:
   opts_chunk: 
     fig.path: "figs/"
     cache.path: "cache/"
+    fig.align: "center"
     comment: "" 
 highlight-style: kate
 ---
@@ -87,10 +90,6 @@ Chaque objet est défini par **un identifiant unique**.
 
 
 ![@lambert2016](img/raster_vecteur.png)
-
-
-
-
 
 
 # Le socle de l'écosystème
@@ -700,7 +699,7 @@ Le package `maptiles` [@R-maptiles] permet de télécharger des fonds de carte (
 :::
 
 ::: {.column width="60%"}
-```{r}
+```{r maptiles}
 #| include: false
 #| eval: false
 library(maptiles)
@@ -722,7 +721,7 @@ dev.off()
 
 ```
 
-```{r}
+```{r maptiles_fake}
 #| eval: false
 #| code-line-numbers: 1,6-10
 library(maptiles)
@@ -796,15 +795,22 @@ mf_credits(get_credit("OpenStreetMap"), bg = "white")
 - `gstat` : Variogram et Krigeage
 - `rgeoda` : Geoda avec R
 - `GWmodel`, `spgwr` : Geographically Weighted Models
-- ...
+
+::: {.callout-tip title="CRAN Task View: Analysis of Spatial Data"}
+* Spatial sampling
+* Point pattern analysis
+* Geostatistics
+* Disease mapping and areal data analysis
+* Spatial regression
+* Ecological analysis
+:::
+
 
 ::: {.callout-tip title="Session Geospatial à 11h!"}
 ![](img/sessiongeo.png){.nostretch}
 :::
 
-::: aside
-[CRAN Task View: Analysis of Spatial Data](https://cran.r-project.org/web/views/Spatial.html)
-:::
+
 
 
 # Accessibilité des restaurants et des hotels dans le centre d'Avignon
@@ -824,7 +830,7 @@ Nous utilisons le [système de clef/valeur d'OSM](https://wiki.openstreetmap.org
 :::
 
 ::: {.column width="70%"}
-```{r}
+```{r mapsf_init}
 #| include: false
 #| cache: false
 mapsf::mf_theme(mar = c(0,0,0,0))
@@ -842,8 +848,8 @@ resto <-  bbox_avignon |>
   opq(osm_types = "node")|>
   add_osm_feature(key = 'amenity', value = "restaurant") |>
   osmdata_sf() |>
-  _$osm_points
-mf_map(resto)
+  _$osm_points |>
+  mf_map()
 ```
 
 :::
@@ -920,7 +926,7 @@ plot(ds)
 
 On peut améliorer la représentation des résultats en les superposant à un fond de carte raster.  
 
-```{r}
+```{r kde_to_rast}
 #| eval: true
 #| cache: false
 #| code-fold: true
@@ -929,13 +935,13 @@ library(terra)
 # densité en restaurants / hectares
 r <- rast(ds) * 100 * 100
 crs(r) <- st_crs(resto)$wkt
-plot(r)
 ```
 
 
-```{r}
+```{r get_tiles_for_kde}
 #| eval: true
 #| cache: false
+#| code-line-numbers: 1,3-7,11-13
 #| code-fold: true
 #| results: false
 #| code-summary: "Téléchargement des tuiles et superposition"
@@ -956,47 +962,71 @@ dev.off()
 ```
 ![](img/avignon_dens1.png)
 
-Nous pouvons aussi transformer le raster des densités en polygones de plages de densités. 
-```{r}
+## Densité des restaurants {.scrollable}
+
+::: columns
+
+::: {.column width="20%"}
+![](img/logo_mapiso.png)
+
+Nous pouvons aussi transformer le raster des densités en polygones de plages de densités grâce au package `mapiso` [@R-mapiso]. 
+:::
+
+::: {.column width="80%"}
+
+```{r mapiso}
 #| eval: true
+#| echo: true
+#| results: false
 #| cache: false
 #| code-fold: true
-#| results: false
+#| code-line-numbers: 1,5-6
 #| code-summary: "Transformation du raster en polygones"
+library(mapiso)
 # Limites des classes
 maxval <- max(values(r))
-bks <-  unique(c(seq(0, floor(maxval), 1), maxval))
-library(mapiso)
+bks <-  c(seq(0, floor(maxval), 1), maxval)
+# Transformation du raster en polygones
 iso_dens <- mapiso(r, breaks = bks)
 # Suppression de la première classe ([0, 1[)
 iso_dens <- iso_dens[-1, ]
-
-mf_raster(r)
-mf_map(iso_dens, add = T, col = NA)
+# Affichage
+mf_export(r, "img/iso_dens.png", width = ncol(r)*2)
+mf_raster(r, add = TRUE)
+mf_map(iso_dens, col = NA, add = TRUE)
+dev.off()
 ```
+![](img/iso_dens.png)
 
-```{r}
+:::
+:::
+
+## Densité des restaurants {.nostretch}
+La dernière étape consiste à superposer ces polygones au fond de carte. 
+
+```{r mapiso_map}
 #| eval: true
 #| cache: false
 #| code-fold: true
 #| results: false
-#| code-summary: "Cartographie des polygones"
+#| code-summary: "Cartographie"
 mf_export(tiles_osm, filename = "img/avignon_dens2.png", 
-          height = nrow(tiles_osm), 
+          width = 600, 
           expandBB = c(0,0,0,.5))
 mf_raster(tiles_osm, add = TRUE)
 mf_map(iso_dens, var = "isomin", type = "choro",
        breaks = bks[-1], border = "white",
-       pal = "Burg", alpha = .7,
-       leg_pos = "bottomright1",
-       leg_frame = TRUE, leg_val_rnd = 1,
+       pal = "Teal", alpha = .9,
+       leg_pos = "right",
+       leg_val_rnd = 1,
        leg_title = paste0("Densité de restaurants dans\n",
                           "un voisinage gaussien (σ = 50m),\n",
                           "en restaurants par hectare"),
        add = TRUE)
-mf_map(resto, add = TRUE)
-mf_credits("T. Giraud, 2023\nOpenStreetMap contributors, 2023", bg = "white")
-mf_scale(250, unit = "m")
+mf_map(resto, cex = .5, add = TRUE)
+mf_credits("T. Giraud, 2023\nOpenStreetMap contributors, 2023", 
+           pos = "bottomright", bg = "white")
+mf_scale(pos = "bottomleft", size = 250, unit = "m")
 mf_arrow(pos = "topright")
 mf_title("Densité des restaurants dans le centre-ville d'Avignon")
 dev.off()
@@ -1006,18 +1036,19 @@ dev.off()
 
 
 
-## Acquisition de données pour un fond de carte vectorielle {.scrollable}
-
+## Acquisition de données pour un fond de carte vectoriel
+::: columns
+::: {.column width="20%"}
 Nous pouvons aussi utiliser un fond de carte vectoriel.  
-Ici nous allons télécharger et préparer un fonde carte constitué : 
+Ici nous allons préparer un fond de carte constitué : 
 
 - des espaces verts
 - des surfaces en eaux
 - des routes et rails 
 - des bâtiments
-- des hotels
-
-
+- des hotels et des restaurants
+:::
+::: {.column width="80%"}
 ```{r data-dwld}
 #| eval: false
 #| cache: true
@@ -1144,7 +1175,7 @@ st_write(obj = center, dsn = "data/avignon.gpkg", layer = "center")
 ```
 
 
-```{r}
+```{r silent_osm_import}
 #| include: false
 center <- st_read(dsn = "data/avignon.gpkg", layer = "center")
 hotel <- st_read(dsn = "data/avignon.gpkg", layer = "hotel")
@@ -1159,15 +1190,15 @@ river <- st_read(dsn = "data/avignon.gpkg", layer = "river")
 
 Il suffit maintenant de combiner toutes ces couches pour constituer un fond de carte. 
 
-```{r}
+```{r map_vecto_osm}
 #| eval: true
 #| code-fold: true
 #| results: false
+#| cache: false
 #| code-summary: "Cartographie"
-library(sf)
 library(mapsf)
-mf_theme("candy", fg = "#393939")
-mf_export(center, "img/avignon.png", width = 768)
+mf_theme("candy", bg ="#f7f7f7")
+mf_export(center, "img/avignon.png", width = 768, res = 110)
 mf_map(center, col = "#f2efe9", border = NA, add = TRUE)
 mf_map(river, col = "#aad3df", border = "#aad3df", lwd = .5, add = TRUE)
 mf_map(esp_vert, col = "#c8facc", border = "#c8facc", lwd = .5, add = TRUE)
@@ -1183,71 +1214,92 @@ mf_scale(100, unit = "m")
 mf_arrow(pos = "topright")
 mf_legend(type = "symb", pos = "bottomright2", val = c("Hotels", "Restaurants"),
           pal = c("#000094", "#940010"), pt_cex = c(1, 1), pt_pch = c(21, 23),
-          border = "white", title = "")
+          border = "white", title = "", val_cex = 1)
 dev.off()
 ```
 
-![](img/avignon.png){width="5in"}
+![](img/avignon.png){width=400}
 
-Nous pouvons maintenant superposer les densités sur ce fond de carte 
-```{r}
+:::
+:::
+
+
+## De l'hotel à la conf... {.scrollable .nostretch}
+
+Nous voulons connaître tous les chemins empruntés par les conférenciers pour se rendre au Rencontres R 2023!
+
+::: columns
+::: {.column width="20%"}
+![](img/logo_tidygeocoder.png)
+
+Le package `tidygeocoder` [@R-tidygeocoder] permet d'utiliser [un grand nombre de services de géocodage en ligne](https://jessecambon.github.io/tidygeocoder/articles/geocoder_services.html). 
+
+:::
+::: {.column width="80%"}
+
+```{r tidygeocoder}
 #| eval: true
-#| results: false
+#| cache: true
+#| code-line-numbers: "2"
+library(tidygeocoder)
+(conf <- geo("74 rue Louis Pasteur, 84000 Avignon, FRANCE"))
+```
+
+
+
+```{r pos_conf}
+#| eval: true
 #| code-fold: true
-#| code-summary: "Carte finale"
-iso_dens <- st_transform(iso_dens, st_crs(center))
+#| results: false
+#| cache: false
+#| code-summary: "Positionnons la conf sur la carte"
 library(sf)
-library(mapsf)
-mf_theme("candy", fg = "#393939")
-mf_export(center, "img/avignon_dens3.png", width = 768)
+geoconf <- st_as_sf(conf, coords = c("long", "lat"), crs = "EPSG:4326") |>
+  st_transform(st_crs(center))
+mf_export(center, "img/avignon_conf.png", width = 768, res = 110)
 mf_map(center, col = "#f2efe9", border = NA, add = TRUE)
 mf_map(river, col = "#aad3df", border = "#aad3df", lwd = .5, add = TRUE)
 mf_map(esp_vert, col = "#c8facc", border = "#c8facc", lwd = .5, add = TRUE)
 mf_map(rail, col = "grey50", lty = 2, lwd = .2, add = TRUE)
 mf_map(routes, col = "white", border = "white", add = TRUE)
 mf_map(batiments, col = "#d9d0c9", border = "#c6bab1", lwd = 1, add = TRUE)
-mf_map(iso_dens, var = "isomin", type = "choro",
-       breaks = bks[-1], border = "white",
-       pal = "Burg", alpha = .7,
-       leg_pos = "bottomright1",
-       leg_frame = TRUE, leg_val_rnd = 1,
-       leg_title = paste0("Densité de restaurants dans\n",
-                          "un voisinage gaussien (σ = 50m),\n",
-                          "en restaurants par hectare"),
-       add = TRUE)
-mf_map(resto, col = "white", bg = "#940010", pch = 23, lwd = 1, cex = 1, add = TRUE)
+mf_map(geoconf, col = "white", bg = "#646400", pch = 22, lwd = 1, cex = 4, add = TRUE)
+mf_map(hotel, col = "white", bg = "#000094", pch = 21, lwd = 1, cex = 1, add = TRUE)
 mf_map(center, col = NA, border = "grey25", lwd = 4, add = TRUE)
-mf_title("Avignon")
+mf_title("Rencontres R 2023")
 mf_credits("T. Giraud, 2023\nOpenStreetMap contributors, 2023")
-mf_scale(100, unit = "m")
+mf_scale(250, unit = "m")
 mf_arrow(pos = "topright")
 dev.off()
 ```
 
-![](img/avignon_dens3.png){width="5in"}
+![](img/avignon_conf.png){width=400}
+:::
+:::
+
+## De l'hotel à la conf... {.scrollable .nostretch}
 
 
+::: columns
+::: {.column width="20%"}
+![](img/logo_osrm.png)
 
+Le package `osrm` [@R-osrm] permet de calculer des trajets par le plus court chemin en s'appuyant sur les données d'OSM. 
 
-## De l'hotel à la conf {.scrollable .nostretch}
-Nous pouvons aussi utiliser un fond de carte vectoriel.  
-Ici nous allons télécharger et préparer un fonde carte constitué : 
+:::
+::: {.column width="80%"}
 
-- des espaces verts
-- des surfaces en eaux
-- des routes et rails 
-- des bâtiments
-- des hotels
-
-```{r}
-#| code-fold: true
+```{r osrm1}
+#| eval: true
 #| cache: true
+#| code-fold: true
+#| message: false
+#| results: false
+#| code-summary: "Calcul des routes"
+#| code-line-numbers: 1,4-7
+#| fig-width: 3
+#| fig-height: 3
 library(osrm)
-library(tidygeocoder)
-conf <- geo("74 rue Louis Pasteur, 84000 Avignon, FRANCE")
-geoconf <- st_as_sf(conf, coords = c("long", "lat"), crs = "EPSG:4326") |>
-  st_transform(st_crs(center))
-
 routes_hotel <- vector("list", nrow(hotel))
 for (i in 1:length(routes_hotel)){
   routes_hotel[[i]] <- osrmRoute(src = hotel[i, ],
@@ -1256,28 +1308,26 @@ for (i in 1:length(routes_hotel)){
                                  osrm.profile = 'foot')
   Sys.sleep(1)
 }
-routes_hotel <- do.call("rbind", routes_hotel)
+routes_hotel <- do.call(rbind, routes_hotel)
+```
 
-
-library(stplanr)
-routes_hotel$w <- 1
-routes_hotel_ag <- overline2(routes_hotel, "w")
-
-mf_export(center, "img/avignon_conf.png", width = 500)
+```{r osrm2}
+#| eval: true
+#| code-fold: true
+#| results: false
+#| code-summary: "Cartographie des routes"
+mf_export(center, "img/avignon_routes.png", width = 768, res = 110)
 mf_map(center, col = "#f2efe9", border = NA, add = TRUE)
 mf_map(river, col = "#aad3df", border = "#aad3df", lwd = .5, add = TRUE)
 mf_map(esp_vert, col = "#c8facc", border = "#c8facc", lwd = .5, add = TRUE)
 mf_map(rail, col = "grey50", lty = 2, lwd = .2, add = TRUE)
 mf_map(routes, col = "white", border = "white", add = TRUE)
 mf_map(batiments, col = "#d9d0c9", border = "#c6bab1", lwd = 1, add = TRUE)
-mf_map(routes_hotel_ag, "w", "grad",
-       add = TRUE, breaks = c(1,5,10,20,33),
-       lwd = c(2,5,9,13), leg_pos = "topleft", col= "#940000",
-       leg_title = 'Nombre de trajets\nempruntant la voie')
+mf_map(routes_hotel, col = "#940000", lwd = 2, add = TRUE)
 mf_map(hotel, col = "white", bg = "#000094", pch = 21, lwd = 1, cex = 1, add = TRUE)
 mf_map(geoconf, col = "white", bg = "#646400", pch = 22, lwd = 1, cex = 3, add = TRUE)
 mf_map(center, col = NA, border = "grey25", lwd = 4, add = TRUE)
-mf_title("Avignon")
+mf_title("Toutes les routes mènent aux Rencontres R")
 mf_credits("T. Giraud, 2023\nOpenStreetMap contributors, 2023")
 mf_scale(100, unit = "m")
 mf_arrow(pos = "topright")
@@ -1286,7 +1336,61 @@ dev.off()
 ```
 
 
-![](img/avignon_conf.png)
+![](img/avignon_routes.png){width=400}
+:::
+:::
+
+## De l'hotel à la conf... {.scrollable .nostretch}
+::: columns
+::: {.column width="20%"}
+![](img/logo_stplanr.png)
+
+Il est possible d'agréger les tronçons empruntés par plusieurs routes grâce au package `stplanr` [@R-stplanr]. 
+
+:::
+::: {.column width="80%"}
+```{r stplanr}
+library(stplanr)
+routes_hotel$w <- 1
+routes_hotel_ag <- overline2(routes_hotel, "w")
+```
+
+Nous pouvons ensuite cartographier ces tronçons agrégés par classes de taille.
+```{r stplanr_map}
+#| eval: true
+#| code-fold: true
+#| code-summary: "Cartographie"
+#| code-line-numbers: 8-13
+#| results: false
+mf_export(center, "img/avignon_routes_ag.png", width = 768, res = 110)
+mf_map(center, col = "#f2efe9", border = NA, add = TRUE)
+mf_map(river, col = "#aad3df", border = "#aad3df", lwd = .5, add = TRUE)
+mf_map(esp_vert, col = "#c8facc", border = "#c8facc", lwd = .5, add = TRUE)
+mf_map(rail, col = "grey50", lty = 2, lwd = .2, add = TRUE)
+mf_map(routes, col = "white", border = "white", add = TRUE)
+mf_map(batiments, col = "#d9d0c9", border = "#c6bab1", lwd = 1, add = TRUE)
+mf_map(routes_hotel_ag, var = "w", type = "grad",
+       breaks = c(1,5,10,20,30,33),
+       lwd = c(2,5,9,13,19), 
+       leg_pos = "topleft", col= "#940000",
+       leg_title = 'Nombre de trajets\nempruntant la voie', 
+       add = TRUE)
+mf_map(hotel, col = "white", bg = "#000094", pch = 21, lwd = 1, cex = 1, add = TRUE)
+mf_map(geoconf, col = "white", bg = "#646400", pch = 22, lwd = 1, cex = 3, add = TRUE)
+mf_map(center, col = NA, border = "grey25", lwd = 4, add = TRUE)
+mf_title("Toutes les routes mènent aux Rencontres R")
+mf_credits("T. Giraud, 2023\nOpenStreetMap contributors, 2023")
+mf_scale(100, unit = "m")
+mf_arrow(pos = "topright")
+dev.off()
+```
+
+![](img/avignon_routes_ag.png){width=400}
+
+
+
+:::
+:::
 
 ## Ressources
 
@@ -1307,7 +1411,55 @@ dev.off()
 
 [R Special Interest Group on using Geographical data and Mapping](https://stat.ethz.ch/mailman/listinfo/r-sig-geo) (mailing list)
 
+## Ressources {.nostretch}
+
+::: columns
+
+::: {.column width="20%"}
+
+![](img/logo_rzine.png)
+
+**[Rzine](https://rzine.fr) vise à Encourager la production et favoriser la diffusion de documentation sur la pratique de R en SHS.**
+
+* Référencement de documents et supports divers.
+* La collection Rzine : publications open source, *open peer review*.  
+
+:::
+::: {.column width="10%"}
+:::
+::: {.column width="60%"}
+![](img/rzine.png)
+:::
+::: {.column width="10%"}
+:::
+:::
+
+
+
 ## Ressources
-![rzine.fr](img/rzine.png)
+
+::: columns
+
+::: {.column width="20%"}
+
+![](img/logo_elementr.png)
+
+[ElementR](https://elementr.netlify.app/) est un groupe d'autoformation qui fédère trois unités de recherche en géographie : l'UMR Géographie-Cités, l'UMR PRODIG et l'UAR RIATE.  
+Ses activités sont accessibles à l'ensemble des membres du Campus Condorcet.
+:::
+::: {.column width="10%"}
+:::
+::: {.column width="60%"}
+![](img/elementr.png)
+:::
+::: {.column width="10%"}
+:::
+:::
+
+
+
+
+
+
 
 ## Bibliographie {.scrollable}
