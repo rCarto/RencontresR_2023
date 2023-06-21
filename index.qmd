@@ -120,8 +120,17 @@ Des bibliothèques géographiques largement utilisées :
 
 :::
 
-::: {.column width="75%"}
+::: {.column width="50%"}
 ![@pebesma2023 [chap. 1.7]](img/sf_deps.png)
+:::
+
+::: {.column width="25%"}
+::: {.callout-caution title="Il s'agit de dépendances externes"}
+* Installation
+* Reproductibilité  
+
+Envisager la conteneurisation [@nust2021].
+:::
 :::
 :::
 
@@ -405,7 +414,7 @@ knitr::opts_chunk$set(fig.width=6, fig.height=6)
 
 ```{r import_terra}
 #| layout-ncol: 2
-#| code-line-numbers: 2-3
+#| code-line-numbers: 1-2
 #| cache: false
 library(terra)
 alt_raw <- rast("data/altitude.tif") 
@@ -747,11 +756,11 @@ mf_credits(get_credit("OpenStreetMap"), bg = "white")
 **Alternatives**
 
 * `ceramic`
-* `ggmap` (`ggplot2` focused)
-* `ggspatial` (`ggplot2` focused, based on `rosm`)
+* `ggmap` (pour `ggplot2`)
+* `ggspatial` (pour `ggplot2`, utilise `rosm`)
 * `mapboxapi` (mapbox)
-* `mapsapi` (google, based on `RgoogleMaps`)
-* `OpenStreetMap` (requires Java)
+* `mapsapi` (google, utilise `RgoogleMaps`)
+* `OpenStreetMap` (nécessite Java)
 * `RgoogleMaps` (google)
 * `rosm`
 * …
@@ -790,12 +799,15 @@ mf_credits(get_credit("OpenStreetMap"), bg = "white")
 # Analyse spatiale / statistique spatiale
 
 ## Statistiques spatiales {.nostretch}
-
+::: columns
+::: {.column width="50%"}
 - `spatstat` : Analyse statistique de semis de points
 - `gstat` : Variogram et Krigeage
 - `rgeoda` : Geoda avec R
 - `GWmodel`, `spgwr` : Geographically Weighted Models
 
+:::
+::: {.column width="50%"}
 ::: {.callout-tip title="CRAN Task View: Analysis of Spatial Data"}
 * Spatial sampling
 * Point pattern analysis
@@ -804,12 +816,17 @@ mf_credits(get_credit("OpenStreetMap"), bg = "white")
 * Spatial regression
 * Ecological analysis
 :::
+:::
+:::
 
 
 ::: {.callout-tip title="Session Geospatial à 11h!"}
 ![](img/sessiongeo.png){.nostretch}
 :::
 
+::: {.callout-tip title="La session workflow a l'air cool aussi !"}
+
+:::
 
 
 
@@ -1392,26 +1409,103 @@ dev.off()
 :::
 :::
 
-## Ressources
+# Ressources
 
-[Geocomputation with R](https://r.geocompx.org/) - @lovelace2019  
-[Geocomputation with R](https://r.geocompx.org/fr/) - Première partie en français 
 
-[Spatial Data Science with applications in R](https://r-spatial.org/book/) - @pebesma2023
+## Geocomputation with R
 
-[Spatial Data Science with R and "terra"](https://rspatial.org/) - Robert J. Hijmans
 
-[Progress in the R ecosystem for representing and handling spatial data](https://link.springer.com/article/10.1007/s10109-020-00336-0) - @bivand2021
+::: columns
 
-[Cartographie avec R](https://rcarto.github.io/cartographie_avec_r/) - @Giraud_Cartographie_avec_R_2023
+::: {.column width="40%"}
 
-[Géomatique avec R](https://rcarto.github.io/geomatique_avec_r/) - @Giraud_Geomatique_avec_R_2023
+![](img/GeocomputationwithR.png)
 
-[CRAN Task View: Analysis of Spatial Data](https://cran.r-project.org/web/views/Spatial.html)
+:::
+::: {.column width="30%"}
 
-[R Special Interest Group on using Geographical data and Mapping](https://stat.ethz.ch/mailman/listinfo/r-sig-geo) (mailing list)
+{{< fa solid users >}} @lovelace2019   
 
-## Ressources {.nostretch}
+{{< fa solid link >}} [r.geocompx.org](https://r.geocompx.org/)  
+
+{{< fa solid plus >}} [Première partie en français](https://r.geocompx.org/fr/)   
+
+:::
+:::
+
+## Spatial Data Science with applications in R
+
+::: columns
+
+::: {.column width="40%"}
+
+![](img/sdsr.jpg)
+
+:::
+::: {.column width="30%"}
+
+{{< fa solid users >}} @pebesma2023 
+
+{{< fa solid link >}} [r-spatial.org/book](https://r-spatial.org/book/)  
+
+:::
+:::
+
+
+## Spatial Data Science with R and "terra"
+
+
+::: columns
+
+::: {.column width="40%"}
+
+![](img/sds.png)
+
+:::
+::: {.column width="30%"}
+
+{{< fa solid users >}} Robert J. Hijmans (2023) 
+
+{{< fa solid link >}} [rspatial.org](https://rspatial.org/)
+
+:::
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Cartographie et Géomatique avec R
+
+::: columns
+::: {.column width="40%"}
+![](img/carto_avec_r.png)
+
+{{< fa solid users >}} @Giraud_Cartographie_avec_R_2023
+
+{{< fa solid link >}} [rcarto.github.io/cartographie_avec_r](https://rcarto.github.io/cartographie_avec_r/)
+
+:::
+::: {.column width="40%"}
+
+![](img/geom_avec_r.png)
+
+{{< fa solid users >}} @Giraud_Geomatique_avec_R_2023
+
+{{< fa solid link >}} [rcarto.github.io/geomatique_avec_r](https://rcarto.github.io/geomatique_avec_r/)
+
+:::
+:::
+
+## Rzine {.nostretch}
 
 ::: columns
 
@@ -1436,7 +1530,7 @@ dev.off()
 
 
 
-## Ressources
+## ElementR
 
 ::: columns
 
@@ -1458,8 +1552,34 @@ Ses activités sont accessibles à l'ensemble des membres du Campus Condorcet.
 
 
 
+## Ressources
+
+- [CRAN Task View: Analysis of Spatial Data](https://cran.r-project.org/web/views/Spatial.html)
+- [R Special Interest Group on using Geographical data and Mapping](https://stat.ethz.ch/mailman/listinfo/r-sig-geo) (mailing list)
+- [r-spatial blog](https://www.r-spatial.org/)
+- [Progress in the R ecosystem for representing and handling spatial data](https://link.springer.com/article/10.1007/s10109-020-00336-0) [@bivand2021]
 
 
+# Merci de votre attention {style="text-align: center"}
+
+::: {style="font-size: 1.5em; text-align: center"}
+{{< fa display >}} [rcarto.github.io/RencontresR_2023](https://rcarto.github.io/RencontresR_2023)
+
+
+{{< fa brands mastodon >}} [\@rcarto\@fosstodon.org](https://fosstodon.org/\@rcarto)  
+
+
+{{< fa blog >}} [rcarto.github.io](https://rcarto.github.io/)  
+
+
+{{< fa brands github >}} [\@rcarto](https://github.com/rcarto)  
+
+:::
+
+::: footer
+![](img/logo_by-sa.svg)
+
+:::
 
 
 ## Bibliographie {.scrollable}
