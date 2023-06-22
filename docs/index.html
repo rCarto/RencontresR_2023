@@ -422,57 +422,12 @@
 Timothée Giraud 
 </div>
         <p class="quarto-title-affiliation">
-            RIATE - CNRS
+            RIATE - CNRS<br><img src="img/logos-footer.png" width="250">
           </p>
     </div>
 </div>
 
   <p class="date">23 juin 2023</p>
-</section>
-<section>
-<section id="les-données-spatiales" class="title-slide slide level1 center">
-<h1>Les données spatiales</h1>
-
-</section>
-<section id="vecteur-et-raster" class="slide level2">
-<h2>Vecteur et raster</h2>
-<div class="columns">
-<div class="column" style="width:49%;">
-<h3 id="raster">Raster</h3>
-<p>C’est une <strong>image localisée dans l’espace</strong>.</p>
-<p>L’information géographique est alors stockée dans des pixels.</p>
-<p>Chaque pixel, <strong>défini par une résolution</strong>, possède des valeurs qui peuvent être traitées et cartographiées.</p>
-</div><div class="column" style="width:51%;">
-<p><img data-src="img/raster.png"></p>
-</div>
-</div>
-</section>
-<section id="vecteur-et-raster-1" class="slide level2">
-<h2>Vecteur et raster</h2>
-<div class="columns">
-<div class="column" style="width:49%;">
-<h3 id="vecteur">Vecteur</h3>
-<p>Il s’agit d’objets géométriques de type <strong>points</strong>, <strong>lignes</strong> ou <strong>polygones</strong>.</p>
-<p>Ces objets vectoriels ne <strong>pixellisent pas</strong>.</p>
-<p>Chaque objet est défini par <strong>un identifiant unique</strong>.</p>
-</div><div class="column" style="width:49%;">
-<p><img data-src="img/vecteur.png"></p>
-</div>
-</div>
-</section>
-<section id="vecteur-et-raster-2" class="slide level2 nostretch">
-<h2>Vecteur et raster</h2>
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="img/raster_vecteur.png"></p>
-<figcaption><span class="citation" data-cites="lambert2016">Lambert et Zanin (<a href="#/bibliographie" role="doc-biblioref" onclick="">2016</a>)</span></figcaption>
-</figure>
-</div>
-</section></section>
-<section>
-<section id="le-socle-de-lécosystème" class="title-slide slide level1 center">
-<h1>Le socle de l’écosystème</h1>
-
 </section>
 <section id="quelques-repères-historiques" class="slide level2">
 <h2>Quelques repères historiques</h2>
@@ -491,8 +446,43 @@ Timothée Giraud
 <li>2020 : <u><code>terra</code></u> <span class="citation" data-cites="R-terra">(<a href="#/bibliographie" role="doc-biblioref" onclick="">Hijmans, 2023b</a>)</span>, remplace aussi <code>raster</code></li>
 </ul>
 </section>
-<section id="le-socle-du-socle" class="slide level2">
-<h2>Le socle du socle</h2>
+<section id="rappel-sur-les-données-spatiales" class="slide level2">
+<h2>Rappel (?) sur les données spatiales</h2>
+<div class="columns">
+<div class="column" style="width:49%;">
+<h3 id="raster">Raster</h3>
+<p>C’est une <strong>image localisée dans l’espace</strong>.</p>
+<p>L’information géographique est alors stockée dans des pixels.</p>
+<p>Chaque pixel, <strong>défini par une résolution</strong>, possède des valeurs qui peuvent être traitées et cartographiées.</p>
+</div><div class="column" style="width:51%;">
+<p><img data-src="img/raster.png"></p>
+</div>
+</div>
+</section>
+<section id="rappel-sur-les-données-spatiales-1" class="slide level2">
+<h2>Rappel (?) sur les données spatiales</h2>
+<div class="columns">
+<div class="column" style="width:49%;">
+<h3 id="vecteur">Vecteur</h3>
+<p>Il s’agit d’objets géométriques de type <strong>points</strong>, <strong>lignes</strong> ou <strong>polygones</strong>.</p>
+<p>Ces objets vectoriels ne <strong>pixellisent pas</strong>.</p>
+<p>Chaque objet est défini par <strong>un identifiant unique</strong>.</p>
+</div><div class="column" style="width:49%;">
+<p><img data-src="img/vecteur.png"></p>
+</div>
+</div>
+</section>
+<section id="vecteur-et-raster" class="slide level2 nostretch">
+<h2>Vecteur et raster</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/raster_vecteur.png"></p>
+<figcaption><span class="citation" data-cites="lambert2016">Lambert et Zanin (<a href="#/bibliographie" role="doc-biblioref" onclick="">2016</a>)</span></figcaption>
+</figure>
+</div>
+</section>
+<section id="le-socle-de-lécosystème" class="slide level2">
+<h2>Le socle de l’écosystème</h2>
 <div class="columns">
 <div class="column" style="width:25%;">
 <p>Des bibliothèques géographiques largement utilisées :</p>
@@ -1360,11 +1350,6 @@ Projected CRS: WGS 84 / UTM zone 20N</code></pre>
 6  6 140.1108</code></pre>
 </div>
 </div>
-</section></section>
-<section>
-<section id="cartographie" class="title-slide slide level1 center">
-<h1>Cartographie</h1>
-
 </section>
 <section id="cartographie-thématique" class="slide level2">
 <h2>Cartographie thématique</h2>
@@ -1632,14 +1617,9 @@ Projected CRS: WGS 84 / UTM zone 20N</code></pre>
 </div>
 </div>
 </div>
-</section></section>
-<section>
-<section id="analyse-spatiale-statistique-spatiale" class="title-slide slide level1 center">
-<h1>Analyse spatiale / statistique spatiale</h1>
-
 </section>
-<section id="statistiques-spatiales" class="slide level2 nostretch">
-<h2>Statistiques spatiales</h2>
+<section id="analyse-spatiale-statistique-spatiale" class="slide level2 nostretch">
+<h2>Analyse spatiale / statistique spatiale</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <ul>
@@ -1690,14 +1670,37 @@ Projected CRS: WGS 84 / UTM zone 20N</code></pre>
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>La session workflow a l’air cool aussi !</strong></p>
+<p><strong>La session Workflow a l’air cool aussi !</strong></p>
 </div>
 <div class="callout-content">
 
 </div>
 </div>
 </div>
-</section></section>
+</section>
+<section id="télécharger-des-données-spatiales" class="slide level2">
+<h2>Télécharger des données spatiales</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Maillages administratifs</strong> :<br>
+<code>rnaturalearth</code> pour les pays du monde, <code>giscoR</code> pour les régions européennes, <code>tigris</code>, <code>mapSpain</code>, <code>geobr</code>, …</p>
+<p><strong>Données climatiques</strong> :<br>
+<code>geodata</code> (+ plein d’autres choses)</p>
+<p><strong>Altitudes</strong> :<br>
+<code>elevatr</code> <i class="fa-solid fa-triangle-exclamation" aria-label="triangle-exclamation"></i></p>
+<p><strong>Occurences d’especes</strong> :<br>
+<code>spocc</code></p>
+</div><div class="column" style="width:50%;">
+<p><strong>Données eco / socio / démographique</strong> :<br>
+<code>wbstats</code> (World Bank), <code>eurostat</code>, <code>rdhs</code> (santé), …</p>
+<p><strong>Données satellitaires</strong> :<br>
+<code>sen2r</code> (Sentinel-2)<br>
+<code>MODIStsp</code> (MODIS)<br>
+<code>rgee</code> (Google Earth Engine)<br>
+<code>nasapower</code> (météo, climato)</p>
+</div>
+</div>
+</section>
 <section>
 <section id="accessibilité-des-restaurants-et-des-hotels-dans-le-centre-davignon" class="title-slide slide level1 center">
 <h1>Accessibilité des restaurants et des hotels dans le centre d’Avignon</h1>
@@ -1853,26 +1856,26 @@ y 43.938975 43.958975</code></pre>
 <div class="cell" data-layout-align="center">
 <details>
 <summary>Cartographie</summary>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_export</span>(tiles_osm, <span class="at">filename =</span> <span class="st">"img/avignon_dens2.png"</span>, </span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">width =</span> <span class="dv">600</span>, </span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">expandBB =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,.<span class="dv">5</span>))</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_raster</span>(tiles_osm, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(iso_dens, <span class="at">var =</span> <span class="st">"isomin"</span>, <span class="at">type =</span> <span class="st">"choro"</span>,</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">breaks =</span> bks[<span class="sc">-</span><span class="dv">1</span>], <span class="at">border =</span> <span class="st">"white"</span>,</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">pal =</span> <span class="st">"Teal"</span>, <span class="at">alpha =</span> .<span class="dv">9</span>,</span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">leg_pos =</span> <span class="st">"right"</span>,</span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">leg_val_rnd =</span> <span class="dv">1</span>,</span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">leg_title =</span> <span class="fu">paste0</span>(<span class="st">"Densité de restaurants dans</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"un voisinage gaussien (σ = 50m),</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"en restaurants par hectare"</span>),</span>
-<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(resto, <span class="at">cex =</span> .<span class="dv">5</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_credits</span>(<span class="st">"T. Giraud, 2023</span><span class="sc">\n</span><span class="st">OpenStreetMap contributors, 2023"</span>, </span>
-<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>           <span class="at">pos =</span> <span class="st">"bottomright"</span>, <span class="at">bg =</span> <span class="st">"white"</span>)</span>
-<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_scale</span>(<span class="at">pos =</span> <span class="st">"bottomleft"</span>, <span class="at">size =</span> <span class="dv">250</span>, <span class="at">unit =</span> <span class="st">"m"</span>)</span>
-<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_arrow</span>(<span class="at">pos =</span> <span class="st">"topright"</span>)</span>
-<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_title</span>(<span class="st">"Densité des restaurants dans le centre-ville d'Avignon"</span>)</span>
-<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43" data-code-line-numbers="4-14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="fu">mf_export</span>(tiles_osm, <span class="at">filename =</span> <span class="st">"img/avignon_dens2.png"</span>, </span>
+<span id="cb43-2"><a href="#cb43-2"></a>          <span class="at">width =</span> <span class="dv">600</span>, </span>
+<span id="cb43-3"><a href="#cb43-3"></a>          <span class="at">expandBB =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,.<span class="dv">5</span>))</span>
+<span id="cb43-4"><a href="#cb43-4"></a><span class="fu">mf_raster</span>(tiles_osm, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb43-5"><a href="#cb43-5"></a><span class="fu">mf_map</span>(iso_dens, <span class="at">var =</span> <span class="st">"isomin"</span>, <span class="at">type =</span> <span class="st">"choro"</span>,</span>
+<span id="cb43-6"><a href="#cb43-6"></a>       <span class="at">breaks =</span> bks[<span class="sc">-</span><span class="dv">1</span>], <span class="at">border =</span> <span class="st">"white"</span>,</span>
+<span id="cb43-7"><a href="#cb43-7"></a>       <span class="at">pal =</span> <span class="st">"Teal"</span>, <span class="at">alpha =</span> .<span class="dv">9</span>,</span>
+<span id="cb43-8"><a href="#cb43-8"></a>       <span class="at">leg_pos =</span> <span class="st">"right"</span>,</span>
+<span id="cb43-9"><a href="#cb43-9"></a>       <span class="at">leg_val_rnd =</span> <span class="dv">1</span>,</span>
+<span id="cb43-10"><a href="#cb43-10"></a>       <span class="at">leg_title =</span> <span class="fu">paste0</span>(<span class="st">"Densité de restaurants dans</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb43-11"><a href="#cb43-11"></a>                          <span class="st">"un voisinage gaussien (σ = 50m),</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb43-12"><a href="#cb43-12"></a>                          <span class="st">"en restaurants par hectare"</span>),</span>
+<span id="cb43-13"><a href="#cb43-13"></a>       <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb43-14"><a href="#cb43-14"></a><span class="fu">mf_map</span>(resto, <span class="at">cex =</span> .<span class="dv">5</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb43-15"><a href="#cb43-15"></a><span class="fu">mf_credits</span>(<span class="st">"T. Giraud, 2023</span><span class="sc">\n</span><span class="st">OpenStreetMap contributors, 2023"</span>, </span>
+<span id="cb43-16"><a href="#cb43-16"></a>           <span class="at">pos =</span> <span class="st">"bottomright"</span>, <span class="at">bg =</span> <span class="st">"white"</span>)</span>
+<span id="cb43-17"><a href="#cb43-17"></a><span class="fu">mf_scale</span>(<span class="at">pos =</span> <span class="st">"bottomleft"</span>, <span class="at">size =</span> <span class="dv">250</span>, <span class="at">unit =</span> <span class="st">"m"</span>)</span>
+<span id="cb43-18"><a href="#cb43-18"></a><span class="fu">mf_arrow</span>(<span class="at">pos =</span> <span class="st">"topright"</span>)</span>
+<span id="cb43-19"><a href="#cb43-19"></a><span class="fu">mf_title</span>(<span class="st">"Densité des restaurants dans le centre-ville d'Avignon"</span>)</span>
+<span id="cb43-20"><a href="#cb43-20"></a><span class="fu">dev.off</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p><img data-src="img/avignon_dens2.png"></p>
@@ -2026,17 +2029,21 @@ Ici nous allons préparer un fond de carte constitué :</p>
 <span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(rail, <span class="at">col =</span> <span class="st">"grey50"</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> .<span class="dv">2</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(routes, <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">border =</span> <span class="st">"white"</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(batiments, <span class="at">col =</span> <span class="st">"#d9d0c9"</span>, <span class="at">border =</span> <span class="st">"#c6bab1"</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(hotel, <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">bg =</span> <span class="st">"#000094"</span>, <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="dv">1</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(resto, <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">bg =</span> <span class="st">"#940010"</span>, <span class="at">pch =</span> <span class="dv">23</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="dv">1</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(center, <span class="at">col =</span> <span class="cn">NA</span>, <span class="at">border =</span> <span class="st">"grey25"</span>, <span class="at">lwd =</span> <span class="dv">4</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_title</span>(<span class="st">"Avignon"</span>)</span>
-<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_credits</span>(<span class="st">"T. Giraud, 2023</span><span class="sc">\n</span><span class="st">OpenStreetMap contributors, 2023"</span>)</span>
-<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_scale</span>(<span class="dv">100</span>, <span class="at">unit =</span> <span class="st">"m"</span>)</span>
-<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_arrow</span>(<span class="at">pos =</span> <span class="st">"topright"</span>)</span>
-<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_legend</span>(<span class="at">type =</span> <span class="st">"symb"</span>, <span class="at">pos =</span> <span class="st">"bottomright2"</span>, <span class="at">val =</span> <span class="fu">c</span>(<span class="st">"Hotels"</span>, <span class="st">"Restaurants"</span>),</span>
-<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>          <span class="at">pal =</span> <span class="fu">c</span>(<span class="st">"#000094"</span>, <span class="st">"#940010"</span>), <span class="at">pt_cex =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), <span class="at">pt_pch =</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">23</span>),</span>
-<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>          <span class="at">border =</span> <span class="st">"white"</span>, <span class="at">title =</span> <span class="st">""</span>, <span class="at">val_cex =</span> <span class="dv">1</span>)</span>
-<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(hotel, <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">bg =</span> <span class="st">"#000094"</span>, </span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="dv">1</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(resto, <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">bg =</span> <span class="st">"#940010"</span>, </span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">pch =</span> <span class="dv">23</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="dv">1</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(center, <span class="at">col =</span> <span class="cn">NA</span>, <span class="at">border =</span> <span class="st">"grey25"</span>, <span class="at">lwd =</span> <span class="dv">4</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_title</span>(<span class="st">"Avignon"</span>)</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_credits</span>(<span class="st">"T. Giraud, 2023</span><span class="sc">\n</span><span class="st">OpenStreetMap contributors, 2023"</span>)</span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_scale</span>(<span class="dv">100</span>, <span class="at">unit =</span> <span class="st">"m"</span>)</span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_arrow</span>(<span class="at">pos =</span> <span class="st">"topright"</span>)</span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_legend</span>(<span class="at">type =</span> <span class="st">"symb"</span>, <span class="at">pos =</span> <span class="st">"bottomright2"</span>, </span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>          <span class="at">val =</span> <span class="fu">c</span>(<span class="st">"Hotels"</span>, <span class="st">"Restaurants"</span>),</span>
+<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>          <span class="at">pal =</span> <span class="fu">c</span>(<span class="st">"#000094"</span>, <span class="st">"#940010"</span>), </span>
+<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a>          <span class="at">pt_cex =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), <span class="at">pt_pch =</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">23</span>),</span>
+<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a>          <span class="at">border =</span> <span class="st">"white"</span>, <span class="at">title =</span> <span class="st">""</span>, <span class="at">val_cex =</span> <span class="dv">1</span>)</span>
+<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p><img data-src="img/avignon.png" width="400"></p>
@@ -2101,19 +2108,20 @@ Ici nous allons préparer un fond de carte constitué :</p>
 <p><img data-src="img/logo_osrm.png"></p>
 <p>Le package <code>osrm</code> <span class="citation" data-cites="R-osrm">(<a href="#/bibliographie" role="doc-biblioref" onclick="">Giraud, 2022b</a>)</span> permet de calculer des trajets par le plus court chemin en s’appuyant sur les données d’OSM.</p>
 </div><div class="column" style="width:80%;">
-<div class="cell" data-layout-align="center" data-hash="cache/osrm1_bf684596cd993c828f4a5230be842ffa">
+<div class="cell" data-layout-align="center" data-hash="cache/osrm1_de3bab7567e65a6f2cf753efd63e2c14">
 <details>
 <summary>Calcul des routes</summary>
-<div class="sourceCode cell-code" id="cb51" data-code-line-numbers="1,4-7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a><span class="fu">library</span>(osrm)</span>
-<span id="cb51-2"><a href="#cb51-2"></a>routes_hotel <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, <span class="fu">nrow</span>(hotel))</span>
-<span id="cb51-3"><a href="#cb51-3"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(routes_hotel)){</span>
-<span id="cb51-4"><a href="#cb51-4"></a>  routes_hotel[[i]] <span class="ot">&lt;-</span> <span class="fu">osrmRoute</span>(<span class="at">src =</span> hotel[i, ],</span>
-<span id="cb51-5"><a href="#cb51-5"></a>                                 <span class="at">dst =</span> geoconf,</span>
-<span id="cb51-6"><a href="#cb51-6"></a>                                 <span class="at">overview =</span> <span class="st">"full"</span>,</span>
-<span id="cb51-7"><a href="#cb51-7"></a>                                 <span class="at">osrm.profile =</span> <span class="st">'foot'</span>)</span>
-<span id="cb51-8"><a href="#cb51-8"></a>  <span class="fu">Sys.sleep</span>(<span class="dv">1</span>)</span>
-<span id="cb51-9"><a href="#cb51-9"></a>}</span>
-<span id="cb51-10"><a href="#cb51-10"></a>routes_hotel <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, routes_hotel)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51" data-code-line-numbers="1,5-8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a><span class="fu">library</span>(osrm)</span>
+<span id="cb51-2"><a href="#cb51-2"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(hotel)</span>
+<span id="cb51-3"><a href="#cb51-3"></a>routes_hotel <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, n)</span>
+<span id="cb51-4"><a href="#cb51-4"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb51-5"><a href="#cb51-5"></a>  routes_hotel[[i]] <span class="ot">&lt;-</span> <span class="fu">osrmRoute</span>(<span class="at">src =</span> hotel[i, ],</span>
+<span id="cb51-6"><a href="#cb51-6"></a>                                 <span class="at">dst =</span> geoconf,</span>
+<span id="cb51-7"><a href="#cb51-7"></a>                                 <span class="at">overview =</span> <span class="st">"full"</span>,</span>
+<span id="cb51-8"><a href="#cb51-8"></a>                                 <span class="at">osrm.profile =</span> <span class="st">'foot'</span>)</span>
+<span id="cb51-9"><a href="#cb51-9"></a>  <span class="fu">Sys.sleep</span>(<span class="dv">1</span>)</span>
+<span id="cb51-10"><a href="#cb51-10"></a>}</span>
+<span id="cb51-11"><a href="#cb51-11"></a>routes_hotel <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, routes_hotel)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-layout-align="center" data-hash="cache/osrm2_16b90241f829efb327d2f8e4c5842d79">
@@ -2291,13 +2299,14 @@ Ses activités sont accessibles à l’ensemble des membres du Campus Condorcet.
 <p><i class="fa-brands fa-github" aria-label="github"></i> <a href="https://github.com/rcarto">@rcarto</a></p>
 </div>
 <div class="footer">
-<p><img data-src="img/logo_by-sa.svg"></p>
+<p><img data-src="img/logo_by-sa.svg"><br>
+<img src="img/logos-footer.png" width="250"></p>
 </div>
 </section>
 <section id="bibliographie" class="slide level2 scrollable smaller">
 <h2>Bibliographie</h2>
 
-<img src="img/logos-footer.png" class="slide-logo r-stretch"><div class="footer footer-default">
+<img src="img/logo_RR.png" class="slide-logo r-stretch"><div class="footer footer-default">
 
 </div>
 <div id="refs" class="references csl-bib-body hanging-indent" data-line-spacing="2" role="list">

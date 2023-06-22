@@ -2,8 +2,8 @@
 title: "L'écosystème spatial de R"
 subtitle: "Rencontres R - Avignon"
 author: "Timothée Giraud"
-institute: RIATE - CNRS
-title-slide-attributes: 
+institute: RIATE - CNRS</br><img src="img/logos-footer.png" width="250" />
+title-slide-attributes:
   data-background-image: img/logo_RR.png
   data-background-size: 5%
   data-background-position: 2% 2%
@@ -30,7 +30,7 @@ bibliography: references.bib
 date: 23 06 2023
 date-format: "D MMM YYYY"
 lang: fr
-logo: "img/logos-footer.png"
+logo: "img/logo_RR.png"
 csl: "universite-de-montreal-apa.csl"
 knitr:
   opts_chunk: 
@@ -44,9 +44,23 @@ highlight-style: kate
 
 
 
-# Les données spatiales
 
-## Vecteur et raster
+## Quelques repères historiques 
+
+- avant 2003 : `spatial`, `sgeostat`, `splancs`, `akima`, `geoR`, `spatstat`, `spdep`, `maptools`.   
+- 2003 : `rgdal` [@R-rgdal], interface entre R et GDAL/PROJ4  
+- 2005 : `sp` [@R-sf], classes et méthodes dédiées aux objets spatiaux, **adoption rapide** 
+- 2008 : support de `sp` par `ggplot2` 
+- 2010 : `rgeos` [@R-rgeos], interface entre R et GEOS.   
+- 2010 : `raster` [@R-raster], support des données raster
+- 2016 : <u>`sf`</u> [@R-sf], remplace `sp`, `rgdal` et `rgeos`
+- 2018 : <u>`stars`</u> [@pebesma2023], remplace `raster`
+- 2020 : <u>`terra`</u> [@R-terra], remplace aussi `raster`
+
+
+
+
+## Rappel (?) sur les données spatiales
 
 ::: columns
 ::: {.column width="49%"}
@@ -66,8 +80,7 @@ Chaque pixel, **défini par une résolution**, possède des valeurs qui peuvent 
 :::
 
 
-## Vecteur et raster
-
+## Rappel (?) sur les données spatiales
 
 ::: columns
 ::: {.column width="49%"}
@@ -92,22 +105,8 @@ Chaque objet est défini par **un identifiant unique**.
 ![@lambert2016](img/raster_vecteur.png)
 
 
-# Le socle de l'écosystème
 
-## Quelques repères historiques 
-
-- avant 2003 : `spatial`, `sgeostat`, `splancs`, `akima`, `geoR`, `spatstat`, `spdep`, `maptools`.   
-- 2003 : `rgdal` [@R-rgdal], interface entre R et GDAL/PROJ4  
-- 2005 : `sp` [@R-sf], classes et méthodes dédiées aux objets spatiaux, **adoption rapide** 
-- 2008 : support de `sp` par `ggplot2` 
-- 2010 : `rgeos` [@R-rgeos], interface entre R et GEOS.   
-- 2010 : `raster` [@R-raster], support des données raster
-- 2016 : <u>`sf`</u> [@R-sf], remplace `sp`, `rgdal` et `rgeos`
-- 2018 : <u>`stars`</u> [@pebesma2023], remplace `raster`
-- 2020 : <u>`terra`</u> [@R-terra], remplace aussi `raster`
-
-
-## Le socle du socle
+## Le socle de l'écosystème
 ::: columns
 
 ::: {.column width="25%"}
@@ -466,8 +465,6 @@ head(stat_by_com)
 ```
 
 
-# Cartographie 
-
 ## Cartographie thématique
 
 ::: columns
@@ -725,7 +722,8 @@ mf_theme(mar = c(0,0,0,0))
 mf_export(x = tiles, filename = "img/tiles.png", 
           width = ncol(tiles), height = nrow(tiles))
 mf_raster(tiles, add = T)
-mf_credits(maptiles::get_credit("OpenStreetMap"), bg = "white")
+mf_credits(maptiles::get_credit("OpenStreetMap"), 
+           bg = "white")
 dev.off()
 
 ```
@@ -795,10 +793,9 @@ mf_credits(get_credit("OpenStreetMap"), bg = "white")
 :::
 
 
+ 
 
-# Analyse spatiale / statistique spatiale
-
-## Statistiques spatiales {.nostretch}
+## Analyse spatiale / statistique spatiale {.nostretch}
 ::: columns
 ::: {.column width="50%"}
 - `spatstat` : Analyse statistique de semis de points
@@ -824,11 +821,40 @@ mf_credits(get_credit("OpenStreetMap"), bg = "white")
 ![](img/sessiongeo.png){.nostretch}
 :::
 
-::: {.callout-tip title="La session workflow a l'air cool aussi !"}
+::: {.callout-tip title="La session Workflow a l'air cool aussi !"}
 
 :::
 
+## Télécharger des données spatiales
 
+::: columns
+::: {.column width="50%"}
+**Maillages administratifs** :  
+`rnaturalearth` pour les pays du monde, 
+`giscoR` pour les régions européennes, `tigris`, `mapSpain`, `geobr`, ...
+
+**Données climatiques** :   
+`geodata` (+ plein d'autres choses)
+
+**Altitudes** :   
+`elevatr` {{< fa solid triangle-exclamation >}}
+
+**Occurences d'especes** :   
+`spocc`
+
+::: 
+::: {.column width="50%"}
+**Données eco / socio / démographique** :  
+`wbstats` (World Bank), `eurostat`, `rdhs` (santé), ... 
+
+**Données satellitaires** :   
+`sen2r` (Sentinel-2)  
+`MODIStsp` (MODIS)  
+`rgee` (Google Earth Engine)  
+`nasapower` (météo, climato)  
+
+:::
+:::
 
 # Accessibilité des restaurants et des hotels dans le centre d'Avignon
 
@@ -1027,6 +1053,7 @@ La dernière étape consiste à superposer ces polygones au fond de carte.
 #| code-fold: true
 #| results: false
 #| code-summary: "Cartographie"
+#| code-line-numbers: 4-14
 mf_export(tiles_osm, filename = "img/avignon_dens2.png", 
           width = 600, 
           expandBB = c(0,0,0,.5))
@@ -1222,15 +1249,19 @@ mf_map(esp_vert, col = "#c8facc", border = "#c8facc", lwd = .5, add = TRUE)
 mf_map(rail, col = "grey50", lty = 2, lwd = .2, add = TRUE)
 mf_map(routes, col = "white", border = "white", add = TRUE)
 mf_map(batiments, col = "#d9d0c9", border = "#c6bab1", lwd = 1, add = TRUE)
-mf_map(hotel, col = "white", bg = "#000094", pch = 21, lwd = 1, cex = 1, add = TRUE)
-mf_map(resto, col = "white", bg = "#940010", pch = 23, lwd = 1, cex = 1, add = TRUE)
+mf_map(hotel, col = "white", bg = "#000094", 
+       pch = 21, lwd = 1, cex = 1, add = TRUE)
+mf_map(resto, col = "white", bg = "#940010", 
+       pch = 23, lwd = 1, cex = 1, add = TRUE)
 mf_map(center, col = NA, border = "grey25", lwd = 4, add = TRUE)
 mf_title("Avignon")
 mf_credits("T. Giraud, 2023\nOpenStreetMap contributors, 2023")
 mf_scale(100, unit = "m")
 mf_arrow(pos = "topright")
-mf_legend(type = "symb", pos = "bottomright2", val = c("Hotels", "Restaurants"),
-          pal = c("#000094", "#940010"), pt_cex = c(1, 1), pt_pch = c(21, 23),
+mf_legend(type = "symb", pos = "bottomright2", 
+          val = c("Hotels", "Restaurants"),
+          pal = c("#000094", "#940010"), 
+          pt_cex = c(1, 1), pt_pch = c(21, 23),
           border = "white", title = "", val_cex = 1)
 dev.off()
 ```
@@ -1313,12 +1344,13 @@ Le package `osrm` [@R-osrm] permet de calculer des trajets par le plus court che
 #| message: false
 #| results: false
 #| code-summary: "Calcul des routes"
-#| code-line-numbers: 1,4-7
+#| code-line-numbers: 1,5-8
 #| fig-width: 3
 #| fig-height: 3
 library(osrm)
-routes_hotel <- vector("list", nrow(hotel))
-for (i in 1:length(routes_hotel)){
+n <- nrow(hotel)
+routes_hotel <- vector("list", n)
+for (i in 1:n) {
   routes_hotel[[i]] <- osrmRoute(src = hotel[i, ],
                                  dst = geoconf,
                                  overview = "full",
@@ -1577,8 +1609,8 @@ Ses activités sont accessibles à l'ensemble des membres du Campus Condorcet.
 :::
 
 ::: footer
-![](img/logo_by-sa.svg)
-
+![](img/logo_by-sa.svg)  
+<img src="img/logos-footer.png" width="250" />
 :::
 
 
