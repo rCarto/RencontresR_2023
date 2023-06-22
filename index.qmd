@@ -42,7 +42,7 @@ highlight-style: kate
 ---
 
 
-
+# 
 
 
 ## Quelques repères historiques 
@@ -150,6 +150,7 @@ Pour accompagner le processus d'archivage des packages :
 - Plusieurs talks dans des conférences
 - Communications directes aux auteurs de packages dépendants (emails, issues)
 - Message au démarrage des packages :
+
 <small>
 ```{r exemple_rgeos}
 #| echo: true
@@ -158,6 +159,7 @@ Pour accompagner le processus d'archivage des packages :
 library(rgeos)
 ```
 </small>
+
 :::
 ::: {.column width="35%"}
 
@@ -186,11 +188,12 @@ ref <- merge(ref, tab, by = "id")
 library(gt)
 gt(data = ref[,c("Type", "sf", "stars", "terra", "raster", "rgdal", "rgeos")], ) |> 
   tab_header("Reverse Dependencies") |> 
-  tab_source_note("Source : CRAN, 14 juin 2023")
+  tab_source_note("Source : CRAN, 22 juin 2023")
 ```
 
 :::
 :::
+
 ## Le package `sf` {.nostretch}
 
 

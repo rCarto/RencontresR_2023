@@ -429,6 +429,11 @@ Timothée Giraud
 
   <p class="date">23 juin 2023</p>
 </section>
+<section>
+<section id="section" class="title-slide slide level1 center">
+<h1></h1>
+
+</section>
 <section id="quelques-repères-historiques" class="slide level2">
 <h2>Quelques repères historiques</h2>
 <ul>
@@ -537,8 +542,9 @@ Timothée Giraud
 <li>Une série de posts de blog (avril 2022, décembre 2022, avril 2023, mai 2023)</li>
 <li>Plusieurs talks dans des conférences</li>
 <li>Communications directes aux auteurs de packages dépendants (emails, issues)</li>
-<li>Message au démarrage des packages : <small></small></li><small>
-</small></ul><small>
+<li>Message au démarrage des packages :</li>
+</ul>
+<p><small></small></p><small>
 <div class="cell columns column-output-location" data-layout-align="center">
 <div class="column">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rgeos)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -547,10 +553,14 @@ Timothée Giraud
 <pre><code>Loading required package: sp</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>The legacy packages maptools, rgdal, and rgeos, underpinning this package
-will retire shortly. Please refer to R-spatial evolution reports on
-https://r-spatial.org/r/2023/05/15/evolution4.html for details.
-This package is now running under evolution status 0 </code></pre>
+<pre><code>The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,
+which was just loaded, will retire in October 2023.
+Please refer to R-spatial evolution reports for details, especially
+https://r-spatial.org/r/2023/05/15/evolution4.html.
+It may be desirable to make the sf package available;
+package maintainers should consider adding sf to Suggests:.
+The sp package is now running under evolution status 2
+     (status 2 uses the sf package in place of rgdal)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in load_stuff(): rgeos: versions of GEOS runtime 3.11.1-CAPI-1.17.1
@@ -570,26 +580,26 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
 </div>
 </small><p><small></small></p>
 </div><div class="column" style="width:35%;">
-<div class="cell" data-layout-align="center" data-hash="cache/rev_dep_12ae648030437d1a7e9815f59d296277">
+<div class="cell" data-layout-align="center" data-hash="cache/rev_dep_a6a6997c86a3d15339c2c4568f71bebd">
 <div class="cell-output-display">
 
-<div id="yjoluhcwwy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#yjoluhcwwy table {
+<div id="itzeyrndeb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#itzeyrndeb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#yjoluhcwwy thead, #yjoluhcwwy tbody, #yjoluhcwwy tfoot, #yjoluhcwwy tr, #yjoluhcwwy td, #yjoluhcwwy th {
+#itzeyrndeb thead, #itzeyrndeb tbody, #itzeyrndeb tfoot, #itzeyrndeb tr, #itzeyrndeb td, #itzeyrndeb th {
   border-style: none;
 }
 
-#yjoluhcwwy p {
+#itzeyrndeb p {
   margin: 0;
   padding: 0;
 }
 
-#yjoluhcwwy .gt_table {
+#itzeyrndeb .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -615,12 +625,12 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   border-left-color: #D3D3D3;
 }
 
-#yjoluhcwwy .gt_caption {
+#itzeyrndeb .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#yjoluhcwwy .gt_title {
+#itzeyrndeb .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -632,7 +642,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   border-bottom-width: 0;
 }
 
-#yjoluhcwwy .gt_subtitle {
+#itzeyrndeb .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -644,7 +654,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   border-top-width: 0;
 }
 
-#yjoluhcwwy .gt_heading {
+#itzeyrndeb .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -656,13 +666,13 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   border-right-color: #D3D3D3;
 }
 
-#yjoluhcwwy .gt_bottom_border {
+#itzeyrndeb .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#yjoluhcwwy .gt_col_headings {
+#itzeyrndeb .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -677,7 +687,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   border-right-color: #D3D3D3;
 }
 
-#yjoluhcwwy .gt_col_heading {
+#itzeyrndeb .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -697,7 +707,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   overflow-x: hidden;
 }
 
-#yjoluhcwwy .gt_column_spanner_outer {
+#itzeyrndeb .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -709,15 +719,15 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   padding-right: 4px;
 }
 
-#yjoluhcwwy .gt_column_spanner_outer:first-child {
+#itzeyrndeb .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#yjoluhcwwy .gt_column_spanner_outer:last-child {
+#itzeyrndeb .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#yjoluhcwwy .gt_column_spanner {
+#itzeyrndeb .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -729,11 +739,11 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   width: 100%;
 }
 
-#yjoluhcwwy .gt_spanner_row {
+#itzeyrndeb .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#yjoluhcwwy .gt_group_heading {
+#itzeyrndeb .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -759,7 +769,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   text-align: left;
 }
 
-#yjoluhcwwy .gt_empty_group_heading {
+#itzeyrndeb .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -774,15 +784,15 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   vertical-align: middle;
 }
 
-#yjoluhcwwy .gt_from_md > :first-child {
+#itzeyrndeb .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#yjoluhcwwy .gt_from_md > :last-child {
+#itzeyrndeb .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#yjoluhcwwy .gt_row {
+#itzeyrndeb .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -801,7 +811,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   overflow-x: hidden;
 }
 
-#yjoluhcwwy .gt_stub {
+#itzeyrndeb .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -814,7 +824,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   padding-right: 5px;
 }
 
-#yjoluhcwwy .gt_stub_row_group {
+#itzeyrndeb .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -828,15 +838,15 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   vertical-align: top;
 }
 
-#yjoluhcwwy .gt_row_group_first td {
+#itzeyrndeb .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#yjoluhcwwy .gt_row_group_first th {
+#itzeyrndeb .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#yjoluhcwwy .gt_summary_row {
+#itzeyrndeb .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -846,16 +856,16 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   padding-right: 5px;
 }
 
-#yjoluhcwwy .gt_first_summary_row {
+#itzeyrndeb .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#yjoluhcwwy .gt_first_summary_row.thick {
+#itzeyrndeb .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#yjoluhcwwy .gt_last_summary_row {
+#itzeyrndeb .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -865,7 +875,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   border-bottom-color: #D3D3D3;
 }
 
-#yjoluhcwwy .gt_grand_summary_row {
+#itzeyrndeb .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -875,7 +885,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   padding-right: 5px;
 }
 
-#yjoluhcwwy .gt_first_grand_summary_row {
+#itzeyrndeb .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -885,7 +895,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   border-top-color: #D3D3D3;
 }
 
-#yjoluhcwwy .gt_last_grand_summary_row_top {
+#itzeyrndeb .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -895,11 +905,11 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   border-bottom-color: #D3D3D3;
 }
 
-#yjoluhcwwy .gt_striped {
+#itzeyrndeb .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#yjoluhcwwy .gt_table_body {
+#itzeyrndeb .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -908,7 +918,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   border-bottom-color: #D3D3D3;
 }
 
-#yjoluhcwwy .gt_footnotes {
+#itzeyrndeb .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -922,7 +932,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   border-right-color: #D3D3D3;
 }
 
-#yjoluhcwwy .gt_footnote {
+#itzeyrndeb .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -931,7 +941,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   padding-right: 5px;
 }
 
-#yjoluhcwwy .gt_sourcenotes {
+#itzeyrndeb .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -945,7 +955,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   border-right-color: #D3D3D3;
 }
 
-#yjoluhcwwy .gt_sourcenote {
+#itzeyrndeb .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -953,63 +963,63 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
   padding-right: 5px;
 }
 
-#yjoluhcwwy .gt_left {
+#itzeyrndeb .gt_left {
   text-align: left;
 }
 
-#yjoluhcwwy .gt_center {
+#itzeyrndeb .gt_center {
   text-align: center;
 }
 
-#yjoluhcwwy .gt_right {
+#itzeyrndeb .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#yjoluhcwwy .gt_font_normal {
+#itzeyrndeb .gt_font_normal {
   font-weight: normal;
 }
 
-#yjoluhcwwy .gt_font_bold {
+#itzeyrndeb .gt_font_bold {
   font-weight: bold;
 }
 
-#yjoluhcwwy .gt_font_italic {
+#itzeyrndeb .gt_font_italic {
   font-style: italic;
 }
 
-#yjoluhcwwy .gt_super {
+#itzeyrndeb .gt_super {
   font-size: 65%;
 }
 
-#yjoluhcwwy .gt_footnote_marks {
+#itzeyrndeb .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#yjoluhcwwy .gt_asterisk {
+#itzeyrndeb .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#yjoluhcwwy .gt_indent_1 {
+#itzeyrndeb .gt_indent_1 {
   text-indent: 5px;
 }
 
-#yjoluhcwwy .gt_indent_2 {
+#itzeyrndeb .gt_indent_2 {
   text-indent: 10px;
 }
 
-#yjoluhcwwy .gt_indent_3 {
+#itzeyrndeb .gt_indent_3 {
   text-indent: 15px;
 }
 
-#yjoluhcwwy .gt_indent_4 {
+#itzeyrndeb .gt_indent_4 {
   text-indent: 20px;
 }
 
-#yjoluhcwwy .gt_indent_5 {
+#itzeyrndeb .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1038,23 +1048,23 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
 <td headers="rgdal" class="gt_row gt_right">9</td>
 <td headers="rgeos" class="gt_row gt_right">8</td></tr>
     <tr><td headers="Type" class="gt_row gt_left">Imports</td>
-<td headers="sf" class="gt_row gt_right">413</td>
+<td headers="sf" class="gt_row gt_right">414</td>
 <td headers="stars" class="gt_row gt_right">27</td>
-<td headers="terra" class="gt_row gt_right">119</td>
-<td headers="raster" class="gt_row gt_right">281</td>
+<td headers="terra" class="gt_row gt_right">120</td>
+<td headers="raster" class="gt_row gt_right">280</td>
 <td headers="rgdal" class="gt_row gt_right">109</td>
 <td headers="rgeos" class="gt_row gt_right">69</td></tr>
     <tr><td headers="Type" class="gt_row gt_left">Suggests</td>
 <td headers="sf" class="gt_row gt_right">177</td>
 <td headers="stars" class="gt_row gt_right">30</td>
 <td headers="terra" class="gt_row gt_right">60</td>
-<td headers="raster" class="gt_row gt_right">96</td>
+<td headers="raster" class="gt_row gt_right">97</td>
 <td headers="rgdal" class="gt_row gt_right">85</td>
 <td headers="rgeos" class="gt_row gt_right">50</td></tr>
   </tbody>
   <tfoot class="gt_sourcenotes">
     <tr>
-      <td class="gt_sourcenote" colspan="7">Source : CRAN, 14 juin 2023</td>
+      <td class="gt_sourcenote" colspan="7">Source : CRAN, 22 juin 2023</td>
     </tr>
   </tfoot>
   
@@ -1700,7 +1710,7 @@ Projected CRS: WGS 84 / UTM zone 20N</code></pre>
 <code>nasapower</code> (météo, climato)</p>
 </div>
 </div>
-</section>
+</section></section>
 <section>
 <section id="accessibilité-des-restaurants-et-des-hotels-dans-le-centre-davignon" class="title-slide slide level1 center">
 <h1>Accessibilité des restaurants et des hotels dans le centre d’Avignon</h1>
