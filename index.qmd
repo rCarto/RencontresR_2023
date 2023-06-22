@@ -833,8 +833,9 @@ mf_credits(get_credit("OpenStreetMap"), bg = "white")
 ::: columns
 ::: {.column width="50%"}
 **Maillages administratifs** :  
-`rnaturalearth` pour les pays du monde, 
-`giscoR` pour les régions européennes, `tigris`, `mapSpain`, `geobr`, ...
+`rnaturalearth` pour les pays du monde  
+`giscoR` pour les régions européennes  
+`tigris`, `mapSpain`, `geobr`...  
 
 **Données climatiques** :   
 `geodata` (+ plein d'autres choses)
@@ -848,7 +849,10 @@ mf_credits(get_credit("OpenStreetMap"), bg = "white")
 ::: 
 ::: {.column width="50%"}
 **Données eco / socio / démographique** :  
-`wbstats` (World Bank), `eurostat`, `rdhs` (santé), ... 
+`wbstats` (World Bank)  
+`eurostat`  
+`rdhs` (santé)   
+... 
 
 **Données satellitaires** :   
 `sen2r` (Sentinel-2)  
